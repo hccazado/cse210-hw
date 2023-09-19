@@ -8,30 +8,28 @@ class Program
         //variables
         int magicNumber = 7;
         
-        string guess = "";
+        int guess = -1;
 
-        bool isPlaying = true;
-
-        do {
+        while (guess != magicNumber) {
 
             Console.WriteLine("Type your guess: ");
             
-            guess = Console.ReadLine();
+            guess = int.Parse(Console.ReadLine());
 
             Console.WriteLine(" you guessed: " + guess);
 
-            if (int.Parse(guess) > magicNumber)
+            if (guess > magicNumber)
             {
                 Console.WriteLine("Lower");
             }
-            else if (int.Parse(guess) < magicNumber) {
-                Console.WriteLine("Lower");
+            else if (guess < magicNumber) {
+                Console.WriteLine("Higher");
             }
             else{
                 Console.WriteLine("Congrats! You guessed ir right");
             }
         
-        } while(isPlaying);
+        }
 
         Console.WriteLine("Bye!!");
     }
