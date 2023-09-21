@@ -6,7 +6,9 @@ class Program
     static void Main(string[] args)
     {
         //variables
-        int magicNumber = 7;
+        Random random = new Random();
+
+        int magicNumber = random.Next(1, 99);
         
         int guess = -1;
 
