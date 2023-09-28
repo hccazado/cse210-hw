@@ -4,6 +4,10 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello Develop02 World!");
+        Journal journalApp = new Journal();
+        
+        Console.WriteLine("Hello Develop02 Activity");
+
+        journalApp.DisplayMenu();
     }
 }
