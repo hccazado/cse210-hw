@@ -10,6 +10,6 @@ public class Entry
 
 
     public void DisplayEntry(){
-        Console.WriteLine($"{_date} - {promptList._prompts[_prompt]}\n{_response} ");
+        Console.WriteLine($"{_date} - {promptList._prompts[_prompt]}\n{_response}\n");
     }
 }
