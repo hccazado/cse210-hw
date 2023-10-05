@@ -13,15 +13,13 @@ public class Journal
     public DateTime _date = DateTime.Now;
 
     public Journal()
+    //Empty constructor, when Journal class is instantiated it will call LoadScriptures function
     {
         LoadScriptures();
     }
 
     public void DisplayMenu ()
     {
-
-        
-
         while( choice != "5"){
 
             Console.Clear();
@@ -36,7 +34,6 @@ public class Journal
             Console.WriteLine("|3 - Save Journal                           |");
             Console.WriteLine("|4 - Load Journal                           |");
             Console.WriteLine("|5 - Quit Journal Program                   |");
-            Console.WriteLine("|6 - Show Json                              |");
             Console.WriteLine("|-------------------------------------------|");
             Console.WriteLine("Type your choice: ");
             
@@ -64,7 +61,9 @@ public class Journal
         
                     fileName = Console.ReadLine();
 
-                    SaveJournal(fileName);
+                    fileName += ".csv";
+
+                    SaveCsvJournal(fileName);
 
                 break;
 
@@ -74,7 +73,9 @@ public class Journal
 
                     fileName = Console.ReadLine();
 
-                    LoadJournal(fileName);
+                    fileName += ".csv";
+
+                    LoadCsvJournal(fileName);
 
                 break;
 
@@ -83,17 +84,6 @@ public class Journal
                     Console.WriteLine("Bye!");
 
                     System.Environment.Exit(1);
-
-                break;
-
-                case "6":
-
-                    var opt = new JsonSerializerOptions(){ WriteIndented=true };
-
-                    string entriesJson = JsonSerializer.Serialize(_entries, opt);
-                    
-                    Console.WriteLine(entriesJson);
-                    Console.ReadLine();
 
                 break;
                 
@@ -123,7 +113,6 @@ public class Journal
         }
         else
         {
-        
             Console.WriteLine(promptList._prompts[promptIndex]);
 
             answer = Console.ReadLine();
@@ -149,7 +138,6 @@ public class Journal
             if (entry._date.ToShortDateString() == _date.ToShortDateString()){
 
                 prompts.Add(entry._prompt);
-            
             }
         }
 
@@ -180,12 +168,17 @@ public class Journal
         }
     } 
 
-    public void SaveJournal(string fileName){
-
-        if (_entries.Any()){
+    public void SaveCsvJournal(string fileName)
+    {
+        if (_entries.Any())
+        {
 
             using (StreamWriter output = new StreamWriter(fileName))
             {
+                output.WriteLine("sep=;");
+
+                output.WriteLine("date;promptIndex;response");
+            
                 foreach(var entry in _entries)
                 {
                     output.WriteLine($"{entry._date};{entry._prompt};{entry._response}");
@@ -194,19 +187,19 @@ public class Journal
         }
     }
 
-    public void LoadJournal(string fileName)
+    public void LoadCsvJournal(string fileName)
+    //Try to load user's specified journal name
     {
         try
         {
-
             string[] lines = System.IO.File.ReadAllLines(fileName);
-
-            foreach (string line in lines)
-            {
-                
+            
+            for (int i = 2; i< lines.Length; i++)
+            //indext starts on 3rd line, for skiping csv separator definition and csv header
+            { 
                 Entry entry = new Entry();
 
-                string[] splitLine = line.Split(";");
+                string[] splitLine = lines[i].Split(";");
 
                 Console.WriteLine(splitLine);
 
@@ -230,26 +223,24 @@ public class Journal
     }
     
     public void LoadScriptures()
-    {
+    //load the BoM.csv file into a list of scriptures
+    { 
         string fileName = "BoM.csv";
         
         string[] lines = System.IO.File.ReadAllLines(fileName);
 
         foreach (string line in lines)
         {
-            Scripture scripture = new Scripture();
-
             string[] splitLine = line.Split(";");
 
-            scripture._reference = splitLine[1];
-
-            scripture._text = splitLine[0];
+            Scripture scripture = new Scripture (splitLine[1], splitLine[0]);
 
             _scriptures.Add(scripture);
         }
     }
 
     public void DisplayRandomScripture()
+    //Picks a random index from scriptures array and call scripture's DisplayScripture method.
     {
         Random random = new Random();
 
