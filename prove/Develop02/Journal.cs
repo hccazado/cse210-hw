@@ -1,103 +1,17 @@
 using System.Runtime.CompilerServices;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 public class Journal
 {
-    string choice = "-1";
-
     public List<Entry> _entries = new List<Entry>();
 
-    public List<Scripture> _scriptures = new List<Scripture>();
+    private static DateTime _date = DateTime.Now;
 
-    public DateTime _date = DateTime.Now;
-
-    public Journal()
-    //Empty constructor, when Journal class is instantiated it will call LoadScriptures function
+    public void NewEntry()
     {
-        LoadScriptures();
-    }
-
-    public void DisplayMenu ()
-    {
-        while( choice != "5"){
-
-            Console.Clear();
-            
-            Console.WriteLine("Welcome to the Journal Program!\n");
-
-            DisplayRandomScripture();
-
-            Console.WriteLine("\n|-----------Journal Main Menu---------------|");
-            Console.WriteLine("|1 - Add a New Entry                        |");
-            Console.WriteLine("|2 - Display Entries                        |");
-            Console.WriteLine("|3 - Save Journal                           |");
-            Console.WriteLine("|4 - Load Journal                           |");
-            Console.WriteLine("|5 - Quit Journal Program                   |");
-            Console.WriteLine("|-------------------------------------------|");
-            Console.WriteLine("Type your choice: ");
-            
-            choice = Console.ReadLine();
-
-            switch (choice)
-            {
-                case "1":
-
-                    NewEntry();
-
-                break;
-
-                case "2":
-
-                    ShowEntries();
-
-                break;
-
-                case "3":
-
-                    string fileName;
-
-                    Console.WriteLine("Please type a name for your journal");
         
-                    fileName = Console.ReadLine();
-
-                    fileName += ".csv";
-
-                    SaveCsvJournal(fileName);
-
-                break;
-
-                case "4":
-                    
-                    Console.WriteLine("Type the name of your journal:");
-
-                    fileName = Console.ReadLine();
-
-                    fileName += ".csv";
-
-                    LoadCsvJournal(fileName);
-
-                break;
-
-                case "5":
-
-                    Console.WriteLine("Bye!");
-
-                    System.Environment.Exit(1);
-
-                break;
-                
-                default:
-                    Console.WriteLine("Invalid choice!");
-                break;
-            }
-        }  
-    }
-
-    public void NewEntry(){
         Prompt promptList = new Prompt();
 
-        int promptIndex = promptList.GetRandomPrompt(GetPromptsCurrentDate());
+        int promptIndex = promptList.GetRandomPrompt(GetUsedPromptsOnCurrentDate());
 
         string answer;
 
@@ -129,7 +43,8 @@ public class Journal
         }
     }
 
-    public List<int> GetPromptsCurrentDate(){
+    private List<int> GetUsedPromptsOnCurrentDate()
+    {
 
         List<int> prompts = new List<int>();
 
@@ -144,7 +59,7 @@ public class Journal
         return prompts;
     }
 
-    public void ShowEntries()
+    public void ShowJournalEntries()
     {
 
         if (_entries.Any())
@@ -154,7 +69,7 @@ public class Journal
                 entry.DisplayEntry();
             }
 
-            Console.WriteLine("Press Any Key To Continue!");
+            Console.WriteLine("Press Enter To Continue!");
             
             Console.ReadLine();
         }
@@ -162,7 +77,7 @@ public class Journal
         {
             Console.WriteLine("You Don't Have Any New Entry In Your Journal Yet.");
             
-            Console.WriteLine("Press Any Key To Continue!");
+            Console.WriteLine("Press Enter To Continue!");
             
             Console.ReadLine();
         }
@@ -172,7 +87,6 @@ public class Journal
     {
         if (_entries.Any())
         {
-
             using (StreamWriter output = new StreamWriter(fileName))
             {
                 output.WriteLine("sep=;");
@@ -184,6 +98,12 @@ public class Journal
                     output.WriteLine($"{entry._date};{entry._prompt};{entry._response}");
                 }
             }
+        }
+        else
+        {
+            Console.WriteLine("Your journal doesn't have any item to be saved!\nPress Enter to continue!");
+
+            Console.ReadLine();
         }
     }
 
@@ -210,42 +130,17 @@ public class Journal
                 entry._response = splitLine[2];
                 
                 _entries.Add(entry);
+
             }
         }
         catch(FileNotFoundException error)
         {
             Console.WriteLine(error.Message);
 
-            Console.WriteLine("Press any key to continue!");
+            Console.WriteLine("Press Enter to continue!");
 
             Console.ReadLine();
         }
     }
     
-    public void LoadScriptures()
-    //load the BoM.csv file into a list of scriptures
-    { 
-        string fileName = "BoM.csv";
-        
-        string[] lines = System.IO.File.ReadAllLines(fileName);
-
-        foreach (string line in lines)
-        {
-            string[] splitLine = line.Split(";");
-
-            Scripture scripture = new Scripture (splitLine[1], splitLine[0]);
-
-            _scriptures.Add(scripture);
-        }
-    }
-
-    public void DisplayRandomScripture()
-    //Picks a random index from scriptures array and call scripture's DisplayScripture method.
-    {
-        Random random = new Random();
-
-        int randomScriptureIndex = random.Next(_scriptures.Count);
-
-        _scriptures[randomScriptureIndex].DisplayScripture();
-    }
 }

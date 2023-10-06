@@ -6,10 +6,9 @@ public class Entry
 
     public string _response;
 
-    public Prompt promptList = new Prompt ();
-
+    public Prompt _promptList = new Prompt ();
 
     public void DisplayEntry(){
-        Console.WriteLine($"{_date} - {promptList._prompts[_prompt]}\n{_response}\n");
+        Console.WriteLine($"Date: {_date}\nQuestion: {_promptList._prompts[_prompt]}\nAnswer: {_response}\n");
     }
 }
