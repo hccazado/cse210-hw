@@ -26,7 +26,7 @@ public class Fraction
 
     public void SetTop (int top)
     {
-        this._top = top;
+        _top = top;
     }
 
     public int GetBottom()
@@ -36,7 +36,7 @@ public class Fraction
 
     public void SetBottom(int bottom)
     {
-        this._bottom = bottom;
+        _bottom = bottom;
     }
 
     public string GetFractionString()
