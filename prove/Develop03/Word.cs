@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 public class Word
 {
     private string _word;
-    private Boolean _isVisible;
+    private bool _isVisible;
 
     public Word (string word)
     {
@@ -29,7 +29,7 @@ public class Word
         }
     }
 
-    public Boolean GetVisibility()
+    public bool GetVisibility()
     {
         return _isVisible;
     }
@@ -42,5 +42,13 @@ public class Word
     public void SetVisible()
     {
         _isVisible = true;
+    }
+
+    public void CompareWord(string input)
+    {
+        if (_word.ToUpper().Equals(input.ToUpper()))
+        {
+            SetVisible();
+        }
     }
 }

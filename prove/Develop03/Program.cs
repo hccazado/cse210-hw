@@ -12,39 +12,65 @@ class Program
 
     static void Main(string[] args)
     {
+    
         LoadScripturesFile();
-
-        Console.WriteLine("\tScripture Memorizer - A BYU-I Project");
 
         _userInput = "";
 
+        bool stillHidding = true;
+
         _currentScripture = RandomScriptureIndex();
 
-        while (_userInput != "quit")
+        while (!_userInput.Equals("quit"))
         {
-            Console.WriteLine($"{DisplayReference()} - {DisplayScripture()} ");
-            
+            Console.Clear();
+            Console.WriteLine("\tScripture Memorizer - CSE210\n");
+            Console.WriteLine("1 -    Try a random scripture");
+            Console.WriteLine("2 -    Inform a scripture to memorize");
+            Console.WriteLine("quit - Anytime finish the program");
+            Console.Write("\nYour choice: ");
             _userInput = Console.ReadLine();
 
-            if (_userInput.Equals(""))
-            {
-                _scriptures[_currentScripture].HideRandomWords();
-            }
-        
-        }
-        
-        //Console.WriteLine($"Total of Scriptures: {_scriptures.Count()}");
-        
-    }
+            switch (_userInput){
 
-    private static string DisplayReference()
-    {
-        return _scriptures[_currentScripture].GetReference();
+                case "1":
+
+                break;
+
+                case "2":
+
+                break;
+
+                case "quit":
+                    System.Environment.Exit(0);
+                break;
+
+                default:
+                    Console.WriteLine("Invalid option!\nType return to try again!");
+                break;
+            }
+
+            Console.WriteLine($"{DisplayScripture()}");
+
+            if (_userInput.Equals("") && stillHidding)
+            {
+                stillHidding = _scriptures[_currentScripture].HideRandomWords();
+            }
+            else if (!_userInput.Equals(""))
+            {
+                _scriptures[_currentScripture].VerifyHiddenWords(_userInput);
+            }
+            else if (_userInput.Equals("") && !stillHidding)
+            {
+                
+            }
+        } 
+        
     }
 
     private static string DisplayScripture()
     {
-        return _scriptures[_currentScripture].GetWords();
+        return $"{_scriptures[_currentScripture].GetReference()} - {_scriptures[_currentScripture].GetWords()}";
     }
 
     private static int RandomScriptureIndex()

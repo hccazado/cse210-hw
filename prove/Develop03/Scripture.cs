@@ -48,7 +48,7 @@ public class Scripture
         return _reference.GetReference();
     }
 
-    public void HideRandomWords()
+    public bool HideRandomWords()
     {
         Random random = new Random();
 
@@ -61,7 +61,7 @@ public class Scripture
         while (i <= 2 ) 
         {
             if ( i == visibleWords){
-                break;
+                return false;
             }
             int randomIndex = random.Next(0, wordsLength);
             
@@ -75,6 +75,14 @@ public class Scripture
             }
 
         }
+        return true;
     }
 
+    public void VerifyHiddenWords(string input)
+    {
+        foreach(var word in _words)
+        {
+            word.CompareWord(input);
+        }
+    }
 }
