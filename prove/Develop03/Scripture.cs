@@ -1,88 +1,39 @@
 public class Scripture
 {
-    private List<Word> _words;
+    private string _text;
+    private string _book;
+    private int _chapter;
+    private int _verse;
 
-    private Reference _reference;
-
-    private int _hiddenWordsCount;
 
 
     public Scripture (string book, int chapter, int verse, string text)
     {
-        _reference = new Reference(book, chapter, verse);
-        _hiddenWordsCount = 0;
-        _words = new List<Word>();
-        CreateWordsArray(text);
+        _book = book;
+        _chapter = chapter;
+        _verse = verse;
+        _text = text;
     }
 
-    private void CreateWordsArray(string text)
+    public string GetBook()
     {
-        string[] splitText = text.Split(" ");
-
-        foreach(var currentWord in splitText)
-        {
-            Word word = new Word(currentWord, true);
-            _words.Add(word);
-        }
+        return _book;
     }
 
-    public string GetWords()
+    public int GetChapter()
     {
-        string scriptureWords = "";
-
-        for( int i = 0; i< _words.Count; i++)
-        {
-            if (i == _words.Count){
-                scriptureWords += _words[i].GetWord();
-            }
-            else{
-                scriptureWords += _words[i].GetWord()+" ";
-            }
-        }
-
-        return scriptureWords;
+        return _chapter;
     }
 
-    public string GetReference()
+    public int GetVerse()
     {
-        return _reference.GetReference();
+        return _verse;
     }
 
-    public bool HideRandomWords()
+    public string GetText()
     {
-        Random random = new Random();
-
-        int wordsLength = _words.Count;
-
-        int visibleWords = wordsLength - _hiddenWordsCount;
-
-        int i = 0;
-
-        while (i <= 2 ) 
-        {
-            if ( i == visibleWords){
-                return false;
-            }
-            int randomIndex = random.Next(0, wordsLength);
-            
-            if (_words[randomIndex].GetVisibility())
-            {
-                _words[randomIndex].SetHidden();
-                
-                _hiddenWordsCount +=1;
-                
-                i++;
-            }
-
-        }
-        return true;
+        return _text;
     }
 
-    public void VerifyHiddenWords(string input)
-    {
-        foreach(var word in _words)
-        {
-            word.CompareWord(input);
-        }
-    }
+    
 }

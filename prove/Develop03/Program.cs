@@ -6,7 +6,7 @@ class Program
 {
     private static string _userInput;
 
-    private static int _currentScripture;
+    private static Reference _reference;
 
     private static List<Scripture> _scriptures = new List<Scripture>();
 
@@ -18,8 +18,6 @@ class Program
         _userInput = "";
 
         bool stillHidding = true;
-
-        _currentScripture = RandomScriptureIndex();
 
         while (!_userInput.Equals("quit"))
         {
@@ -34,11 +32,17 @@ class Program
             switch (_userInput){
 
                 case "1":
-
+                    RandomReference();
                 break;
 
                 case "2":
+                    Console.WriteLine("Inform the book, chapter, verse(s) (genesis,1,1-3)");
+                    
+                    Console.Write("\nscripture: ");
 
+                    _userInput = Console.ReadLine();
+
+                    specificReference(_userInput);
                 break;
 
                 case "quit":
@@ -50,15 +54,15 @@ class Program
                 break;
             }
 
-            Console.WriteLine($"{DisplayScripture()}");
+            Console.WriteLine($"{DisplayReference()}");
 
             if (_userInput.Equals("") && stillHidding)
             {
-                stillHidding = _scriptures[_currentScripture].HideRandomWords();
+                stillHidding = _reference.HideRandomWords();
             }
             else if (!_userInput.Equals(""))
             {
-                _scriptures[_currentScripture].VerifyHiddenWords(_userInput);
+                _reference.VerifyHiddenWords(_userInput);
             }
             else if (_userInput.Equals("") && !stillHidding)
             {
@@ -68,18 +72,46 @@ class Program
         
     }
 
-    private static string DisplayScripture()
+    private static string DisplayReference()
     {
-        return $"{_scriptures[_currentScripture].GetReference()} - {_scriptures[_currentScripture].GetWords()}";
+        return $"{_reference.GetReference()} - {_reference.GetWords()}";
     }
 
-    private static int RandomScriptureIndex()
+    private static void RandomReference()
     {
         Random random = new Random();
 
-        int index = random.Next(0, 41995);
+        int index = random.Next(0, _scriptures.Count);
         
-        return index;
+        _reference = new Reference(_scriptures[index]);
+    }
+
+    private static void specificReference(string input)
+    {
+        string[] splitInput = input.Split(",");
+        string[] verses = splitInput[2].Split("-");
+        if(verses.Count() > 1)
+        {
+            List<Scripture>selection = new List<Scripture> ();
+            for (int i = int.Parse(verses[0]); i < int.Parse(verses[1]); i++)
+            {
+                Scripture scripture = _scriptures.Find(scripture => scripture.GetBook().ToUpper() == splitInput[0].ToUpper() && 
+                                                                    scripture.GetChapter() == int.Parse(splitInput[1]) &&
+                                                                    scripture.GetVerse() == i);
+
+                selection.Add(scripture);
+                
+            }
+            _reference = new Reference(selection);
+        }
+
+        else{
+            Scripture scripture = _scriptures.Find(scripture => scripture.GetBook().ToUpper() == splitInput[0].ToUpper() && 
+                                                                    scripture.GetChapter() == int.Parse(splitInput[1]) &&
+                                                                    scripture.GetVerse() == int.Parse(splitInput[2]));
+
+            _reference = new Reference(scripture);
+        }
     }
 
     private static void LoadScripturesFile()
