@@ -5,9 +5,8 @@ public class Scripture
     private int _chapter;
     private int _verse;
 
-
-
     public Scripture (string book, int chapter, int verse, string text)
+    //All attributes are required for instantiating a new object of this class
     {
         _book = book;
         _chapter = chapter;
@@ -33,7 +32,5 @@ public class Scripture
     public string GetText()
     {
         return _text;
-    }
-
-    
+    } 
 }

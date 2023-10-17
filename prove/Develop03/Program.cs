@@ -8,6 +8,8 @@ class Program
 
     private static Reference _reference;
 
+    private static bool _stillPlaying;
+
     private static List<Scripture> _scriptures = new List<Scripture>();
 
     static void Main(string[] args)
@@ -17,100 +19,143 @@ class Program
 
         _userInput = "";
 
-        bool stillHidding = true;
+        _stillPlaying = true;
 
         while (!_userInput.Equals("quit"))
         {
             Console.Clear();
             Console.WriteLine("\tScripture Memorizer - CSE210\n");
-            Console.WriteLine("1 -    Try a random scripture");
-            Console.WriteLine("2 -    Inform a scripture to memorize");
-            Console.WriteLine("quit - Anytime finish the program");
+            Console.WriteLine("   1    -    Try a random scripture");
+            Console.WriteLine("   2    -    Inform a scripture to memorize");
+            Console.WriteLine("quit    -    Anytime finish the program");
             Console.Write("\nYour choice: ");
             _userInput = Console.ReadLine();
 
             switch (_userInput){
 
                 case "1":
-                    RandomReference();
+                    _reference = RandomReference();
+                    Memorize(_reference);
                 break;
 
                 case "2":
-                    Console.WriteLine("Inform the book, chapter, verse(s) (genesis,1,1-3)");
-                    
-                    Console.Write("\nscripture: ");
+                    Console.Write("Book (genesis): ");
+                    string book = Console.ReadLine();
 
-                    _userInput = Console.ReadLine();
+                    Console.Write("\nChapter: ");
+                    string chapter = Console.ReadLine();
 
-                    specificReference(_userInput);
+                    Console.Write("\nVerses: (1 or 1-7): ");
+                    string verses = Console.ReadLine();
+
+                    _reference = SpecificReference(book, chapter, verses);
+
+                    if (_reference != null)
+                    {
+                        Memorize(_reference);
+                    }
                 break;
 
                 case "quit":
+                    Console.WriteLine("Bye!");
                     System.Environment.Exit(0);
                 break;
-
-                default:
-                    Console.WriteLine("Invalid option!\nType return to try again!");
-                break;
             }
-
-            Console.WriteLine($"{DisplayReference()}");
-
-            if (_userInput.Equals("") && stillHidding)
-            {
-                stillHidding = _reference.HideRandomWords();
-            }
-            else if (!_userInput.Equals(""))
-            {
-                _reference.VerifyHiddenWords(_userInput);
-            }
-            else if (_userInput.Equals("") && !stillHidding)
-            {
-                
-            }
-        } 
-        
+        }
     }
 
     private static string DisplayReference()
+    //Prints the reference and its associated Words list
     {
-        return $"{_reference.GetReference()} - {_reference.GetWords()}";
+        return $"{_reference.GetReference()}: {_reference.GetWords()}";
     }
 
-    private static void RandomReference()
+    private static void Memorize(Reference reference)
+    /*loops user input to call HideRandomWords method from _reference each time the user return an empty input;
+      Calls VerifyHiddenWords from _reference when the user return a value;
+      Checks for a "quit" input, ending the application. Also, will end the application if the user return an empty input
+      when there's no more words to be hidden.*/
+    {
+        string input = "";
+
+        while (!input.Equals("quit"))
+        {
+            Console.Clear();
+            Console.WriteLine($"{DisplayReference()}");
+            Console.Write("> ");
+            input = Console.ReadLine();
+
+            //empty input with lefting words to be hidden
+            if (input.Equals("") && _stillPlaying)
+            {
+                _stillPlaying = reference.HideRandomWords();
+            }
+
+            //not empty input, calls reference for verifying the input for any match
+            else if (!input.Equals(""))
+            {
+                _stillPlaying = reference.VerifyHiddenWords(input);
+            }
+            //empty input without anymore words to hide, will terminate the program
+            else if (input.Equals("") && !_stillPlaying)
+            {
+                System.Environment.Exit(0);
+            }
+        }
+        System.Environment.Exit(0);
+    }
+
+    private static Reference RandomReference()
+    //Picks a random index in _scriptures array and return a new instance of Reference with index associated scripture
     {
         Random random = new Random();
-
+        
+        //picking a random index from scriptures list
         int index = random.Next(0, _scriptures.Count);
         
-        _reference = new Reference(_scriptures[index]);
+        //instantiating a new reference object with scripture from random index
+        return new Reference(_scriptures[index]);
     }
 
-    private static void specificReference(string input)
+    private static Reference SpecificReference(string book, string chapter, string verses)
     {
-        string[] splitInput = input.Split(",");
-        string[] verses = splitInput[2].Split("-");
-        if(verses.Count() > 1)
-        {
-            List<Scripture>selection = new List<Scripture> ();
-            for (int i = int.Parse(verses[0]); i < int.Parse(verses[1]); i++)
+        string[] splitVerses = verses.Split("-");
+        try{
+            //Treating compound verse scenario
+            if(verses.Count() > 1 && int.Parse(splitVerses[0]) != int.Parse(splitVerses[1]))
             {
-                Scripture scripture = _scriptures.Find(scripture => scripture.GetBook().ToUpper() == splitInput[0].ToUpper() && 
-                                                                    scripture.GetChapter() == int.Parse(splitInput[1]) &&
-                                                                    scripture.GetVerse() == i);
+                //temporary list for holding user's scriptures selection
+                List<Scripture>selection = new List<Scripture> ();
+                for (int i = int.Parse(splitVerses[0]); i <= int.Parse(splitVerses[1]); i++)
+                {
+                    //Finding user informed scripture
+                    Scripture scripture = _scriptures.Find(scripture => scripture.GetBook().ToUpper() == book.ToUpper() && 
+                                                                        scripture.GetChapter() == int.Parse(chapter) &&
+                                                                        scripture.GetVerse() == i);
 
-                selection.Add(scripture);
-                
+                    //adding found scripture into temporary array
+                    selection.Add(scripture);
+                    
+                }
+                //instantiating a new Reference object with the temporary list as parameter
+                return new Reference(selection);
             }
-            _reference = new Reference(selection);
+            //Treating single verse scripture scenario
+            else{
+                //finding user desired scripture
+                Scripture scripture = _scriptures.Find(scripture => scripture.GetBook().ToUpper() == book.ToUpper() && 
+                                                                        scripture.GetChapter() == int.Parse(chapter) &&
+                                                                        scripture.GetVerse() == int.Parse(splitVerses[0]));
+                
+                //instantiating a new reference object with user selected scripture as parameter
+                return new Reference(scripture);
+            }
         }
-
-        else{
-            Scripture scripture = _scriptures.Find(scripture => scripture.GetBook().ToUpper() == splitInput[0].ToUpper() && 
-                                                                    scripture.GetChapter() == int.Parse(splitInput[1]) &&
-                                                                    scripture.GetVerse() == int.Parse(splitInput[2]));
-
-            _reference = new Reference(scripture);
+        catch (IndexOutOfRangeException)
+        {
+            Console.WriteLine("An error has ocurred!\nPress enter to continue");
+            Console.ReadLine();
+            return _reference;
         }
     }
 
@@ -122,7 +167,7 @@ class Program
             parser.TextFieldType = FieldType.Delimited;
             parser.SetDelimiters(",");
 
-            //skipping the read of 1st line since it's the header
+            //skipping file's 1st line
             if(!parser.EndOfData)
             {
                 parser.ReadLine();
@@ -130,8 +175,7 @@ class Program
             
             //reading file's lines
             while(!parser.EndOfData)
-            {
-                
+            {    
                 //parsing csv line's fields into an array
                 string[] data = parser.ReadFields();
 
