@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.CompilerServices;
-using Microsoft.VisualBasic.FileIO;
 
 class Program
 {
@@ -10,13 +9,9 @@ class Program
 
     private static bool _stillPlaying;
 
-    private static List<Scripture> _scriptures = new List<Scripture>();
-
     static void Main(string[] args)
     {
     
-        LoadScripturesFile();
-
         _userInput = "";
 
         _stillPlaying = true;
@@ -34,7 +29,7 @@ class Program
             switch (_userInput){
 
                 case "1":
-                    _reference = RandomReference();
+                    _reference = new Reference(AppData.RandomReference());
                     Memorize(_reference);
                 break;
 
@@ -48,7 +43,7 @@ class Program
                     Console.Write("\nVerses: (1 or 1-7): ");
                     string verses = Console.ReadLine();
 
-                    _reference = SpecificReference(book, chapter, verses);
+                    _reference = new Reference(AppData.SpecificReference(book, chapter, verses));
 
                     if (_reference != null)
                     {
@@ -103,95 +98,5 @@ class Program
             }
         }
         System.Environment.Exit(0);
-    }
-
-    private static Reference RandomReference()
-    //Picks a random index in _scriptures array and return a new instance of Reference with index associated scripture
-    {
-        Random random = new Random();
-        
-        //picking a random index from scriptures list
-        int index = random.Next(0, _scriptures.Count);
-        
-        //instantiating a new reference object with scripture from random index
-        return new Reference(_scriptures[index]);
-    }
-
-    private static Reference SpecificReference(string book, string chapter, string verses)
-    {
-        string[] splitVerses = verses.Split("-");
-        try{
-            //Treating compound verse scenario
-            if(verses.Count() > 1 && int.Parse(splitVerses[0]) != int.Parse(splitVerses[1]))
-            {
-                //temporary list for holding user's scriptures selection
-                List<Scripture>selection = new List<Scripture> ();
-                for (int i = int.Parse(splitVerses[0]); i <= int.Parse(splitVerses[1]); i++)
-                {
-                    //Finding user informed scripture
-                    Scripture scripture = _scriptures.Find(scripture => scripture.GetBook().ToUpper() == book.ToUpper() && 
-                                                                        scripture.GetChapter() == int.Parse(chapter) &&
-                                                                        scripture.GetVerse() == i);
-
-                    //adding found scripture into temporary array
-                    selection.Add(scripture);
-                    
-                }
-                //instantiating a new Reference object with the temporary list as parameter
-                return new Reference(selection);
-            }
-            //Treating single verse scripture scenario
-            else{
-                //finding user desired scripture
-                Scripture scripture = _scriptures.Find(scripture => scripture.GetBook().ToUpper() == book.ToUpper() && 
-                                                                        scripture.GetChapter() == int.Parse(chapter) &&
-                                                                        scripture.GetVerse() == int.Parse(splitVerses[0]));
-                
-                //instantiating a new reference object with user selected scripture as parameter
-                return new Reference(scripture);
-            }
-        }
-        catch (IndexOutOfRangeException)
-        {
-            Console.WriteLine("An error has ocurred!\nPress enter to continue");
-            Console.ReadLine();
-            return _reference;
-        }
-    }
-
-    private static void LoadScripturesFile()
-    {
-        //creating a new instance of TextFieldParser from VisualBasic.FileIO
-        using(TextFieldParser parser = new TextFieldParser("lds-scriptures.csv"))
-        {
-            parser.TextFieldType = FieldType.Delimited;
-            parser.SetDelimiters(",");
-
-            //skipping file's 1st line
-            if(!parser.EndOfData)
-            {
-                parser.ReadLine();
-            }
-            
-            //reading file's lines
-            while(!parser.EndOfData)
-            {    
-                //parsing csv line's fields into an array
-                string[] data = parser.ReadFields();
-
-                string book = data[5];
-                //string shortBook = data[13];
-
-                int chapter = int.Parse(data[14]);
-                int verse = int.Parse(data[15]);
-                string text = data[16];
-
-                //creating a new scripture object with current line data
-                Scripture scripture = new Scripture(book, chapter, verse, text);
-
-                //adding scripture object to _scriptures list
-                _scriptures.Add(scripture);
-            }
-        }
     }
 }
