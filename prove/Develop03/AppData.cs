@@ -1,4 +1,5 @@
 using Microsoft.VisualBasic.FileIO;
+using System.Text.RegularExpressions;
 
 public static class AppData
 {
@@ -104,5 +105,66 @@ public static class AppData
             Console.ReadLine();
         }
         return selectedScriptures;
+    }
+
+    public static List<Scripture> EvaluateSpecificScripture(string userInput)
+    //Evaluates user input as an regular expression, and returns a list containing user's scriptures
+    {
+        MatchCollection matches;
+
+        string pattern;
+
+        string GetBook(string userInput)
+        {
+            pattern = @"((\d*) (\w*))|(\w*)";
+
+            matches = Regex.Matches(userInput, pattern);
+
+            return matches[0].Groups[0].Value;
+        }
+
+        string GetChapter(string userInput)
+        //returns 2nd position from regex matches since it corresponds to the 1st group of matches' pattern 
+        {
+            pattern = @" (\d*):";
+
+            matches = Regex.Matches(userInput, pattern);
+
+            return matches[0].Groups[1].Value;
+        }
+
+        string GetVerses(string userInput)
+        {
+
+            pattern = @":(\d*)-(\d*)|:(\d*)";
+
+            matches = Regex.Matches(userInput, pattern);
+
+            //Regex matched for one single verse, 3 group of match
+            //returns 4th index because the the 1st contains the expression
+            if (matches[0].Groups[1].Value.Equals(""))
+            {
+                return matches[0].Groups[3].Value;
+            }
+            //Regex matched first pattern, multiple verses, again index o holds the entire expression
+            //concatenating 2nd and 3rd groups from match, which corresponds to initial and final versicles
+            else
+            {
+                string verses = "";
+                verses = matches[0].Groups[1].Value;
+
+                verses +="-"+matches[0].Groups[2].Value;
+
+                return verses;
+            }            
+        }
+
+        //returning the result from SpecificScripture Method
+
+        string book = GetBook(userInput);
+        string chapter = GetChapter(userInput);
+        string verses = GetVerses(userInput);
+
+        return SpecificReference(book, chapter, verses);
     }
 }

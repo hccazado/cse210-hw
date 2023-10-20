@@ -1,6 +1,9 @@
 using System;
+using System.Data;
 using System.Runtime.CompilerServices;
 
+//|((:?\d*)? (\w*) (:?\w*)? (:?\w*)?) ((\w*)-(:?\d*)?)|((:?\d*)?(\w*)) ((\w*)-(:?\d*)?)|((\w*)) ((\w*)-(:?\d*)?)
+//((:?\d*)? (\w*)) (\d*):((\d*)(:?-(\d*))?)|((:?\d*)?(:?\w*)?) (\d*):((\d*)(:?-(\d*))?)|((\w*) (\w*) (\w*)) (\d*):((\d*)(:?-(\d*))?)
 class Program
 {
     private static string _userInput;
@@ -22,6 +25,7 @@ class Program
             Console.WriteLine("\tScripture Memorizer - CSE210\n");
             Console.WriteLine("   1    -    Try a random scripture");
             Console.WriteLine("   2    -    Inform a scripture to memorize");
+            Console.WriteLine("   3    -    Inform a scripture to memorize (RegEX)");
             Console.WriteLine("quit    -    Anytime finish the program");
             Console.Write("\nYour choice: ");
             _userInput = Console.ReadLine();
@@ -44,6 +48,20 @@ class Program
                     string verses = Console.ReadLine();
 
                     _reference = new Reference(AppData.SpecificReference(book, chapter, verses));
+
+                    if (_reference != null)
+                    {
+                        Memorize(_reference);
+                    }
+                break;
+
+                case "3":
+                    Console.WriteLine("Type the scripture (1 Nephi 2:2 or 1 Nephi 2:4-6):");
+                    Console.Write("> ");
+                    
+                    _userInput = Console.ReadLine();
+
+                    _reference = new Reference(AppData.EvaluateSpecificScripture(_userInput));
 
                     if (_reference != null)
                     {
