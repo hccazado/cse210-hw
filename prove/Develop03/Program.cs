@@ -2,8 +2,6 @@ using System;
 using System.Data;
 using System.Runtime.CompilerServices;
 
-//|((:?\d*)? (\w*) (:?\w*)? (:?\w*)?) ((\w*)-(:?\d*)?)|((:?\d*)?(\w*)) ((\w*)-(:?\d*)?)|((\w*)) ((\w*)-(:?\d*)?)
-//((:?\d*)? (\w*)) (\d*):((\d*)(:?-(\d*))?)|((:?\d*)?(:?\w*)?) (\d*):((\d*)(:?-(\d*))?)|((\w*) (\w*) (\w*)) (\d*):((\d*)(:?-(\d*))?)
 class Program
 {
     private static string _userInput;
