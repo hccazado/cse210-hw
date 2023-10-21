@@ -47,25 +47,8 @@ public static class AppData
             return scriptures;
         }
     }
-    public static List<Scripture> GetList()
-    //returns the list with all loaded scriptures
-    {
-        return _scriptures;
-    }
 
-    public static Scripture RandomReference()
-    //Picks a random index in _scriptures array and return a new instance of Reference with index associated scripture
-    {
-        Random random = new Random();
-        
-        //picking a random index from scriptures list
-        int index = random.Next(0, _scriptures.Count);
-        
-        //instantiating a new reference object with scripture from random index
-        return _scriptures[index];
-    }
-
-    public static List<Scripture> SpecificReference(string book, string chapter, string verses)
+    private static List<Scripture> SearchScripture(string book, string chapter, string verses)
     //finds the scriptures that match the parameters and returns a list with one or more scriptures
     {
         string[] splitVerses = verses.Split("-");
@@ -107,7 +90,25 @@ public static class AppData
         return selectedScriptures;
     }
 
-    public static List<Scripture> EvaluateSpecificScripture(string userInput)
+    public static Scripture RandomScripture()
+    //Picks a random index in _scriptures array and return a new instance of Reference with index associated scripture
+    {
+        Random random = new Random();
+        
+        //picking a random index from scriptures list
+        int index = random.Next(0, _scriptures.Count);
+        
+        //instantiating a new reference object with scripture from random index
+        return _scriptures[index];
+    }
+
+    public static List<Scripture> SpecificScripture(string book, string chapter, string verses)
+    {
+        //returns SearchReference using user parameters
+        return SearchScripture(book, chapter, verses);
+    }
+
+    public static List<Scripture> EvaluateScriptureExpression(string userInput)
     //Evaluates user input as an regular expression, and returns a list containing user's scriptures
     {
         MatchCollection matches;
@@ -165,6 +166,6 @@ public static class AppData
         string chapter = GetChapter(userInput);
         string verses = GetVerses(userInput);
 
-        return SpecificReference(book, chapter, verses);
+        return SearchScripture(book, chapter, verses);
     }
 }

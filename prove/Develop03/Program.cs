@@ -31,7 +31,7 @@ class Program
             switch (_userInput){
 
                 case "1":
-                    _reference = new Reference(AppData.RandomReference());
+                    _reference = new Reference(AppData.RandomScripture());
                     Memorize(_reference);
                 break;
 
@@ -45,7 +45,7 @@ class Program
                     Console.Write("\nVerses: (1 or 1-7): ");
                     string verses = Console.ReadLine();
 
-                    _reference = new Reference(AppData.SpecificReference(book, chapter, verses));
+                    _reference = new Reference(AppData.SpecificScripture(book, chapter, verses));
 
                     if (_reference != null)
                     {
@@ -59,7 +59,7 @@ class Program
                     
                     _userInput = Console.ReadLine();
 
-                    _reference = new Reference(AppData.EvaluateSpecificScripture(_userInput));
+                    _reference = new Reference(AppData.EvaluateScriptureExpression(_userInput));
 
                     if (_reference != null)
                     {
@@ -78,7 +78,7 @@ class Program
     private static string DisplayReference()
     //Prints the reference and its associated Words list
     {
-        return $"{_reference.GetReference()}: {_reference.GetWords()}";
+        return $"{_reference.GetReference()}\n{_reference.GetWords()}";
     }
 
     private static void Memorize(Reference reference)

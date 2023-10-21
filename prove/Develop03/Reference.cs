@@ -2,7 +2,8 @@ using System.Runtime.CompilerServices;
 
 public class Reference
 {
-    private Scripture _scripture;
+    private string _book;
+    private int _chapter;
     private string _verse;
     private List<Word> _words;
     private int _hiddenWords;
@@ -10,24 +11,27 @@ public class Reference
     public Reference(Scripture scripture)
     //Public constructor for a single scripture as parameter
     {
-        _scripture = scripture;
+        _book = scripture.GetBook();
+
+        _chapter = scripture.GetChapter();
 
         _hiddenWords = 0;
 
-        _verse = _scripture.GetVerse()+"";
+        _verse = scripture.GetVerse()+"";
 
         _words = new List<Word>();
         
         //converting scripture text into a List of Word 
         CreateWordsArray(scripture.GetText());
     }
-
     public Reference(List<Scripture> scriptures)
     /*constructor for composed(List) scriptures 
     concatenate each scripture text, and create a list of Word*/
     {
         //only the first scripture is stored for keeping book and chapter references
-         _scripture = scriptures[0];
+        _book = scriptures[0].GetBook();
+
+        _chapter = scriptures[0].GetChapter();
 
         _hiddenWords = 0;
 
@@ -47,12 +51,6 @@ public class Reference
 
         CreateWordsArray(text);
     }
-
-    public string GetReference()
-    {
-        return $"{_scripture.GetBook()} {_scripture.GetChapter()}, {_verse}";
-    }
-
     private void CreateWordsArray(string text)
     //splits parameter string insto an array of string for adding each word into reference List of Word
     {
@@ -64,8 +62,11 @@ public class Reference
 
             _words.Add(word); 
         }
+    }   
+    public string GetReference()
+    {
+        return $"{_book} {_chapter}:{_verse}";
     }
-
     public string GetWords()
     /*iterates the list _words to concatenate its members into a string to be returned. 
      ->Each word returns its value or a string of "_" according to its visibility*/
@@ -86,7 +87,6 @@ public class Reference
 
         return scriptureWords;
     }
-
     public bool HideRandomWords()
     /*Randomly calls setHidden from up to three Words elements from _words list.
       Returns: true - if there still any word to be hidden
@@ -126,7 +126,6 @@ public class Reference
         }
         return true;
     }
-
     public bool VerifyHiddenWords(string input)
     //calls each Word from _words List to compare user input with their own value.
     {
@@ -143,5 +142,4 @@ public class Reference
         //forcily returns true for keeping the program running even if the user don't guess any word
         return true;
     }
-
 }
