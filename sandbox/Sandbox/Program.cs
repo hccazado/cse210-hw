@@ -1,9 +1,22 @@
 using System;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello Sandbox World!");
+        Pause();
+        Timer(30);
+    }
+
+    static void Pause()
+        {
+            
+        }
+    static void Timer(int time)
+    {
+         
+        
     }
 }
