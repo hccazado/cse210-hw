@@ -4,47 +4,61 @@ class BreathingActivity : Activity
     //Medical Phisiology 12th Guyton & Hall -
     //Defines in its adult physiological model:
     //Inspiration 2sec
-    //Expiration 2s - (3s) 
+    //Exhaling 2s - (3s) 
     
-    private int _inspiration = 2;
-    private int _expiration = 3;
+    private int _inspiring = 2;
+    private int _exhaling = 3;
     public BreathingActivity(int duration)
     {
         SetName("Mindful Breathing");
 
         SetDescription("Focusing on your breathing permits stress relieving and feeling in control."+
-                        "\nYou'll be guided to control your respiration.");
+                        "You'll be guided to control your respiration.");
 
         SetDuration(duration);
+    }
+
+    protected override string GetStatistics()
+    //overrides method from Activity class
+    {
+        int respiratoryCicles = (GetDuration() / (_inspiring + _exhaling));
+
+        return $"You completed: {respiratoryCicles} respiratory cycles in {GetDuration()} seconds.";
     }
 
     public void MindfulBreathing()
     //Display wellcome message, get ready message, and guides user through breathing steps. Display end message
     {
-        void Inspire ()
+        void Inspire()
         //clean previous console line and prints instruction for user inspiring
         {
             Console.SetCursorPosition(0, Console.CursorTop);
+
             Console.Write(new string(' ', Console.WindowWidth)); 
+
             Console.WriteLine("Inspire: ");
-            Spinner(_inspiration);
+
+            Spinner(_inspiring);
         }
 
         void Exhale()
         //clean previous console line and prints instruction for user exhaling
         {
             Console.SetCursorPosition(0, Console.CursorTop);
+
             Console.Write(new string(' ', Console.WindowWidth)); 
+
             Console.WriteLine("Exhale: ");
-            Spinner(_expiration);
+
+            Spinner(_exhaling);
         }
-        
-        WelcomeMessage();
-        
-        PreparingTimer();
         
         Console.Clear();
 
+        Console.WriteLine(WelcomeMessage());
+        
+        PreparingTimer();
+        
         DateTime startTime = DateTime.Now;
 
         DateTime stopTime = startTime.AddSeconds(GetDuration());
@@ -52,12 +66,18 @@ class BreathingActivity : Activity
         while (DateTime.Now < stopTime)
         {
             Inspire();
+
             Console.SetCursorPosition(0, Console.CursorTop-1);
+
             Console.Write(new string(' ', Console.WindowWidth));
+
             Exhale();
         }
-        Console.WriteLine($"\n\n{EndMessage()}");
 
-        Spinner(3);
+        Console.WriteLine($"\n{GetStatistics()}");
+
+        Console.WriteLine($"\n{EndMessage()}");
+
+        Spinner(5);
     }
 }

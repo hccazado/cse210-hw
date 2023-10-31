@@ -17,73 +17,85 @@ class Activity
     public Activity(string name, string description, int duration)
     {
         _name = name;
-        _description = description;
-        _duration = duration;
-    }
 
-    public string GetName()
-    {
-        return _name;
+        _description = description;
+
+        _duration = duration;
+
     }
     public void SetName(string name)
+    //set a new value for _name attribute
     {
         _name = name;
     }
-    public string GetDescription()
-    {
-        return _description;
-    }
     public void SetDescription(string description)
+    //set a new value for _description attribute
     {
         _description = description;
     }
     public int GetDuration()
+    //returns defined duration for the instance
     {
         return _duration;
     }
     public void SetDuration(int duration)
+    //set a new value for _name attribute
     {
         _duration = duration;
     }
 
     public string WelcomeMessage()
+    //returns a string Activity welcoming message
     {
         return $"Welcome to {_name} Activity\n{_description}";
     }
 
     public string EndMessage()
+    //returns a string Activity ending message
     {
         return $"Congratualitions! you did a great job on your {_name} Activity!";
     }
 
-    protected void PreparingTimer()
+    protected virtual string GetStatistics()
+    // A virtual statistic method to be overwritten on inherited class
     {
-        for(int i = 3; i > 0; i--)
+        return "Statistics method not implemented for this Activity yet.";
+    }
+
+    protected void PreparingTimer()
+    //prints on console instructions for the user getting ready for his activity (lasts for 8 seconds)
+    {
+        for(int i = 8; i > 0; i--)
         {
             Console.Write($"Get Ready: {i}");
+
             Console.SetCursorPosition(0, Console.CursorTop);
+
             Thread.Sleep(1000);
         }
     }
 
-    protected virtual string GetStatistics(){
-        return "Statistics method not yer implemented.";
-    }
-
     protected void Spinner(int duration)
-    //prints 
+    //prints a Spinner animation. Lentgh for its duration must be provided in seconds
     {
         string[] chars = new [] {"|","/","-","\\"};
+
         int i = 0;
+
         DateTime startTime = DateTime.Now;
+        
         DateTime futureTime = startTime.AddSeconds(duration);
 
         while (DateTime.Now < futureTime)
         {
             Console.SetCursorPosition(0, Console.CursorTop);
+
             Console.Write(chars[i]);
+
             i++;
+
             i = i == chars.Length ? 0 : i; 
+
             Thread.Sleep(200);
         }
     }

@@ -1,43 +1,26 @@
-class ReflectionActivity: Activity
+class ReflectingActivity: Activity
 //Inherits from Activity Class
 {
     private List<string> _messages;
 
     private List<string> _questions;
 
-    private List<string> _answers;
+    private int _answers;
 
-    public ReflectionActivity(int duration)
+    public ReflectingActivity(int duration)
     {
-        SetName("Mindful Reflection");
+        SetName("Mindful Reflecting");
 
         SetDescription("Focusing on moments you used your strength and resilience helps improve your"+
                         " self-awareness of your power to accomplish great things.");
         
         SetDuration(duration);
 
-        _answers = new List<string>();
+        SetQuestions();
 
-        _messages = new List<string>
-        {
-            "Think of a time when you stood up for someone else.",
-            "Think of a time when you did something really difficult.",
-            "Think of a time when you helped someone in need.",
-            "Think of a time when you did something truly selfless."
-        };
+        SetMessages();
 
-        _questions = new List<string>
-        {
-            "Why was this experience meaningful to you?",
-            "Have you ever done anything like this before?",
-            "How did you get started?",
-            "How did you feel when it was complete?",
-            "What made this experience successful?",
-            "What is your favorite thing about this experience?",
-            "What could you learn from this experience?",
-            "What did you learn about yourself?",
-            "How can you keep this experience in mind in the future?"
-        };   
+        _answers = 0;
     }
 
     private string RandomMessage()
@@ -57,6 +40,11 @@ class ReflectionActivity: Activity
     {
         Random random = new Random();
 
+        if (_questions.Count == 0)
+        {
+            SetQuestions();
+        }
+
         int index = random.Next(0, _messages.Count);
 
         string question = _questions[index];
@@ -64,25 +52,56 @@ class ReflectionActivity: Activity
         _questions.RemoveAt(index);
 
         return question;
+        
+    }
+
+    private void SetQuestions()
+    //Populates _questions list
+    {
+        _questions = new List<string> {
+            "Why was this experience meaningful to you?",
+            "Have you ever done anything like this before?",
+            "How did you get started?",
+            "How did you feel when it was complete?",
+            "What made this experience successful?",
+            "What is your favorite thing about this experience?",
+            "What could you learn from this experience?",
+            "What did you learn about yourself?",
+            "How can you keep this experience in mind in the future?"
+        };
+    }
+
+    private void SetMessages()
+    //Populates _messages list
+    {
+        _messages = new List<string>
+        {
+            "Think of a time when you stood up for someone else.",
+            "Think of a time when you did something really difficult.",
+            "Think of a time when you helped someone in need.",
+            "Think of a time when you did something truly selfless."
+        };
     }
 
     protected override string GetStatistics()
     //overrides method from Activity class
     {
-        return $"You answered: {_answers.Count} questions in {GetDuration()} seconds.";
+        return $"You answered: {_answers} questions in {GetDuration()} seconds.";
     }
 
-    public void MindfulReflection()
+    public void MindfulReflecting()
     //Displays welcome message and a random reflective message. Display random questions, and dd user input to _answers list
      //and Prints getstatistics method return
     {
-        WelcomeMessage();
+        Console.Clear();
+
+        Console.WriteLine(WelcomeMessage());
         
         PreparingTimer();
         
         Console.WriteLine(RandomMessage());
 
-        Spinner(3);
+        Spinner(5);
         
         DateTime currentTime = DateTime.Now;
         
@@ -96,14 +115,14 @@ class ReflectionActivity: Activity
 
             string answer = Console.ReadLine();
 
-            _answers.Add(answer);
+            _answers++;
         }
 
         Console.WriteLine($"\n{GetStatistics()}");
 
         Console.WriteLine($"\n{EndMessage()}");
 
-        Spinner(3);
+        Spinner(5);
     }
 
 }

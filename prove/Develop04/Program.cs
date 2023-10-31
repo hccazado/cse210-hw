@@ -8,7 +8,6 @@ class Program
 
     static void Main(string[] args)
     {
-        Console.Clear();
         DisplayMenu();
     }
 
@@ -18,6 +17,7 @@ class Program
 
         while (_userChoice != "quit" || _userChoice == "q")
         {
+            Console.Clear();
             Console.WriteLine("\tMindfulness Assignment");
             Console.WriteLine("1    - Breathing Activity");
             Console.WriteLine("2    - Listing Activity");
@@ -30,7 +30,7 @@ class Program
             switch (_userChoice)
             {
                 case "1":
-                    Console.WriteLine("How Long do you want play breathing activity?");
+                    Console.WriteLine("How Long do you want play breathing activity (seconds)?");
 
                     response = Console.ReadLine();
 
@@ -42,7 +42,7 @@ class Program
 
                 break;
                 case "2":
-                    Console.WriteLine("How Long do you want play listing activity?");
+                    Console.WriteLine("How Long do you want play listing activity (seconds)?");
 
                     response = Console.ReadLine();
 
@@ -53,15 +53,15 @@ class Program
                     list.MindfulListing();
                 break;
                 case "3":
-                    ReflectionActivity reflection = new ReflectionActivity(10);
+                    ReflectingActivity reflection = new ReflectingActivity(10);
 
-                    Console.WriteLine("How Long do you want play reflection activity?");
+                    Console.WriteLine("How Long do you want play reflecting activity (seconds)?");
 
                     response = Console.ReadLine();
 
                     _time = int.Parse(response);
 
-                    reflection.MindfulReflection();
+                    reflection.MindfulReflecting();
                 break;
                 case "quit":
                     System.Environment.Exit(0);
