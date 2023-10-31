@@ -71,6 +71,7 @@ class Activity
     }
 
     protected void Spinner(int duration)
+    //prints 
     {
         string[] chars = new [] {"|","/","-","\\"};
         int i = 0;

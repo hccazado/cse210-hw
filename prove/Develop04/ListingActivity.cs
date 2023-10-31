@@ -1,8 +1,9 @@
 using System.Runtime.CompilerServices;
 
 class ListingActivity : Activity
+//Inherits from Activity Class
 {
-    private List<string> _messages;
+    private List<string> _prompts;
     private List<string> _answers;
     public ListingActivity(int duration)
     {
@@ -12,7 +13,7 @@ class ListingActivity : Activity
 
         _answers = new List<string>();
 
-        _messages = new List<string>
+        _prompts = new List<string>
         {
             "Who are people that you appreciate?",
             "What are personal strengths of yours?",
@@ -23,22 +24,25 @@ class ListingActivity : Activity
     }
 
     private string RandomPrompt()
+    //returns a random string from _messages list
     {
         Random random = new Random();
 
-        int index = random.Next(0, _messages.Count);
+        int index = random.Next(0, _prompts.Count);
 
-        string prompt = _messages[index];
+        string prompt = _prompts[index];
 
         return prompt;
     }
 
     protected override string GetStatistics()
+    //overrides method from Activity class
     {
         return $"You provided: {_answers.Count} answers in {GetDuration()} seconds.";
     }
 
     public void MindfulListing()
+    //Displays welcome message and a random prompt. Adds user entries to _answers list. and Prints getstatistics method return
     {
         WelcomeMessage();
 

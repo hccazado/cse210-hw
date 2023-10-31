@@ -1,6 +1,7 @@
 class ReflectionActivity: Activity
+//Inherits from Activity Class
 {
-    private List<string> _prompts;
+    private List<string> _messages;
 
     private List<string> _questions;
 
@@ -17,7 +18,7 @@ class ReflectionActivity: Activity
 
         _answers = new List<string>();
 
-        _prompts = new List<string>
+        _messages = new List<string>
         {
             "Think of a time when you stood up for someone else.",
             "Think of a time when you did something really difficult.",
@@ -40,21 +41,23 @@ class ReflectionActivity: Activity
     }
 
     private string RandomMessage()
+    //returns a random string from _messages list
     {
         Random random = new Random();
 
-        int index = random.Next(0, _prompts.Count);
+        int index = random.Next(0, _messages.Count);
 
-        string prompt = _prompts[index];
+        string prompt = _messages[index];
 
         return prompt;
     }
 
     private string RandomQuestion()
+    //returns a random string from _questions list and removes the returned question from referred list
     {
         Random random = new Random();
 
-        int index = random.Next(0, _prompts.Count);
+        int index = random.Next(0, _messages.Count);
 
         string question = _questions[index];
 
@@ -64,11 +67,14 @@ class ReflectionActivity: Activity
     }
 
     protected override string GetStatistics()
+    //overrides method from Activity class
     {
         return $"You answered: {_answers.Count} questions in {GetDuration()} seconds.";
     }
 
     public void MindfulReflection()
+    //Displays welcome message and a random reflective message. Display random questions, and dd user input to _answers list
+     //and Prints getstatistics method return
     {
         WelcomeMessage();
         

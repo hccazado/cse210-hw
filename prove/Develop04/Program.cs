@@ -5,6 +5,7 @@ class Program
     static string _userChoice;
 
     static int _time;
+
     static void Main(string[] args)
     {
         Console.Clear();
@@ -67,6 +68,7 @@ class Program
                 break;
                 default:
                     Console.WriteLine("Invalid option!\nPress any key to continue.");
+                    
                     Console.ReadLine();
                 break;
             }
