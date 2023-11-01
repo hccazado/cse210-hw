@@ -32,7 +32,7 @@ class BreathingActivity : Activity
         void Inspire()
         //clean previous console line and prints instruction for user inspiring
         {
-            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.SetCursorPosition(0, Console.CursorTop-1);
 
             Console.Write(new string(' ', Console.WindowWidth)); 
 
@@ -44,7 +44,7 @@ class BreathingActivity : Activity
         void Exhale()
         //clean previous console line and prints instruction for user exhaling
         {
-            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.SetCursorPosition(0, Console.CursorTop-2);
 
             Console.Write(new string(' ', Console.WindowWidth)); 
 
