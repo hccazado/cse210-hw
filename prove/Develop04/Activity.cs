@@ -3,14 +3,16 @@ using System.Security.Cryptography.X509Certificates;
 
 class Activity
 {
-    string _name;
-    string _description;
-    int _duration;
+    private string _name;
+    private string _description;
+    private int _duration;
 
     public Activity()
     {
         _name = "Undefined";
+
         _description = "Description not defined";
+        
         _duration = 0;
     }
 

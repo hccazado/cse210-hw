@@ -2,9 +2,9 @@ using System;
 
 class Program
 {
-    static string _userChoice;
+    private static string _userChoice;
 
-    static int _time;
+    private static int _time;
 
     static void Main(string[] args)
     {
@@ -15,13 +15,13 @@ class Program
     {
         string response;
 
-        while (_userChoice != "quit" || _userChoice == "q")
+        while (_userChoice != "quit")
         {
             Console.Clear();
             Console.WriteLine("\tMindfulness Assignment");
             Console.WriteLine("1    - Breathing Activity");
             Console.WriteLine("2    - Listing Activity");
-            Console.WriteLine("3    - Reflection Activity");
+            Console.WriteLine("3    - Reflecting Activity");
             Console.WriteLine("quit - quit app\n");
             Console.Write("Choice: ");
             
@@ -48,18 +48,19 @@ class Program
 
                     _time = int.Parse(response);
 
-                    ListingActivity list = new ListingActivity(10);
+                    ListingActivity list = new ListingActivity(_time);
 
                     list.MindfulListing();
                 break;
-                case "3":
-                    ReflectingActivity reflection = new ReflectingActivity(10);
+                case "3":   
 
                     Console.WriteLine("How Long do you want play reflecting activity (seconds)?");
 
                     response = Console.ReadLine();
 
                     _time = int.Parse(response);
+
+                    ReflectingActivity reflection = new ReflectingActivity(_time);
 
                     reflection.MindfulReflecting();
                 break;

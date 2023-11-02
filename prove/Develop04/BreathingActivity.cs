@@ -3,7 +3,7 @@ class BreathingActivity : Activity
 {
     //Medical Phisiology 12th Guyton & Hall -
     //Defines in its adult physiological model:
-    //Inspiration 2sec
+    //Inspiring 2sec
     //Exhaling 2s - (3s) 
     
     private int _inspiring = 2;
