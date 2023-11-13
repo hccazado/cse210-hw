@@ -1,4 +1,4 @@
-class Shape
+public abstract class Shape
 {
     protected string _color;
 
@@ -16,7 +16,5 @@ class Shape
         _color = color;
     }
 
-    public virtual double GetArea(){
-        return 0.0d;
-    }
+    public abstract double GetArea();
 }
