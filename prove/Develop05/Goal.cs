@@ -6,15 +6,7 @@ abstract class Goal
     protected int _points;
 
     protected bool _isComplete;
-
-    Goal()
-    {
-        _goal = "unknow";
-        _description = "unknow";
-        _points = -99;
-        _isComplete = true;
-    }
-
+    
     public Goal(string goal, string description, int points, bool isComplete)
     {
         _goal = goal;
