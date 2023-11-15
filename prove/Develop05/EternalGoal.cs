@@ -11,7 +11,7 @@ class EternalGoal : Goal
 
     public override string DescribeGoal()
     {
-        return $"() {_goal} - {_description} : worths {_points} points. Accomplished: {_accomplishments} times.";
+        return $"( ) {_goal} - {_description} : worths {_points} points. Accomplished: {_accomplishments} times.";
     }
 
     public override int GoalEvent()
