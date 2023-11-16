@@ -1,4 +1,5 @@
 using System.Net;
+using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 
 class Game
@@ -9,6 +10,28 @@ class Game
     {
         _goals = new List<Goal>();
         _totalPoints = 0;
+    }
+
+    private void SimpleGoal(string goal, string description, int points, bool isComplete)
+    {
+        SimpleGoal simpleGoal = new SimpleGoal(goal, description, points, isComplete);
+        
+        _goals.Add(simpleGoal);
+    }
+
+    private void EternalGoal(string goal, string description, int points, bool isComplete, int accomplishments)
+    {            
+        EternalGoal eternalGoal = new EternalGoal(goal, description, points, isComplete, accomplishments);
+        
+        _goals.Add(eternalGoal);
+    }
+    
+    private void CheckListGoal(string goal, string description, int points, bool isComplete, int bonusPoints, int desiredAccomplishments, int currentAccomplishments)
+    {
+        
+        CheckListGoal checkListGoal = new CheckListGoal(goal,description,points,isComplete,bonusPoints, desiredAccomplishments,currentAccomplishments);
+        
+        _goals.Add(checkListGoal);
     }
 
     public void NewGoal()
@@ -57,26 +80,19 @@ class Game
             case "1":
                 GoalCommonData();
 
-                SimpleGoal simpleGoal = new SimpleGoal(goal, description, points, false);
-
-                _goals.Add(simpleGoal);
-
+                SimpleGoal(goal, description, points, false);
             break;
             case "2":
                 GoalCommonData();
 
-                EternalGoal eternalGoal = new EternalGoal(goal, description, points, false, 0);
-
-                _goals.Add(eternalGoal);
+                EternalGoal(goal, description, points, false, 0);
             break;
             case "3":
                 GoalCommonData();
 
                 CheckListSpecificData();
 
-                CheckListGoal checklistGoal = new CheckListGoal(goal, description, points, false, bonusPoints, desiredAccomplishments, 0);
-
-                _goals.Add(checklistGoal);
+                CheckListGoal(goal, description, points, false, bonusPoints, desiredAccomplishments, 0);
             break;
 
             case "q":
@@ -97,34 +113,85 @@ class Game
         
         ListGoals();
 
-        Console.WriteLine("Type the goal's number you want to accomplish");
+        Console.WriteLine("Type the goal's number you want to record and accomplishment");
 
         input = Console.ReadLine();
 
         int index = int.Parse(input);
 
         _totalPoints += _goals[index - 1].GoalEvent();
-
     }
 
     public void ListGoals()
     {
-        for (int i = 0; i< _goals.Count; i++)
+        if (_goals.Count == 0)
         {
-            Console.WriteLine($"{i+1} - {_goals[i].DescribeGoal()}");
+            Console.WriteLine("You don't have any goals!");
         }
-        Console.WriteLine("Press any key to continue");
-        Console.ReadLine();
+        else
+        {
+            for (int i = 0; i< _goals.Count; i++)
+            {
+                Console.WriteLine($"{i+1} - {_goals[i].DescribeGoal()}");
+            }
+        }
     }
 
     public void SaveGame(string fileName)
     {
-
+        using(StreamWriter output = new StreamWriter(fileName+".txt"))
+        {
+            output.WriteLine(_totalPoints);
+            foreach (var goal in _goals)
+            {
+                output.WriteLine(goal.GoalSavingData());
+            }
+        }
     }
 
     public void LoadGame(string filename)
     {
+        string goal;
+        string description;
+        int points;
+        bool isComplete;
+        int bonusPoints;
+        int desiredAccomplishments;
+        int currentAccomplishments;
+        
+        string[] lines = System.IO.File.ReadAllLines(filename+".txt");
 
+        _totalPoints = int.Parse(lines[0]);
+        
+        for(int i = 1; i< lines.Length; i++)
+        {
+            string[] splitLine = lines[i].Split(";");
+            goal = splitLine[1].ToString();
+            description = splitLine[2].ToString();
+            points = int.Parse(splitLine[3]);
+            isComplete = bool.Parse(splitLine[4].ToString());
+
+            if (splitLine[0].Equals("SimpleGoal"))
+            {
+                SimpleGoal(goal, description, points, isComplete);
+            }
+            else if(splitLine[0].Equals("EternalGoal"))
+            {
+                currentAccomplishments = int.Parse(splitLine[5].ToString());
+                
+                EternalGoal(goal, description, points, isComplete, currentAccomplishments);
+            }
+            else if(splitLine[0].Equals("CheckListGoal"))
+            {
+                currentAccomplishments = int.Parse(splitLine[5].ToString());
+
+                desiredAccomplishments = int.Parse(splitLine[6].ToString());
+                
+                bonusPoints = int.Parse(splitLine[7].ToString());
+
+                CheckListGoal(goal, description, points, isComplete, bonusPoints, desiredAccomplishments, currentAccomplishments);
+            }
+        }
     }
 
     public void Menu()
@@ -134,19 +201,23 @@ class Game
         {
             Console.Clear();
             Console.WriteLine("\tEternal Quest");
+            Console.WriteLine($"\t\t\tCurrent points: {_totalPoints}");
             Console.WriteLine("1 - List goals");
             Console.WriteLine("2 - New goal");
             Console.WriteLine("3 - Goal Accomplished");
             Console.WriteLine("4 - Save goals");
             Console.WriteLine("5 - Load goals");
             Console.WriteLine("q - Exit program\n");
+
             Console.Write("Choice: ");
             option = Console.ReadLine();
 
             switch (option)
             {
                 case "1":
+                Console.Clear();
                     ListGoals();
+                    Console.ReadLine();
                 break;
                 case "2":
                     NewGoal();
@@ -156,12 +227,12 @@ class Game
                 break;
                 case "4":
                     string filename;
-                    Console.WriteLine("Type a name to save your current game");
+                    Console.WriteLine("Type a name to save your current goals");
                     filename = Console.ReadLine();
                     SaveGame(filename);
                 break;
                 case "5":
-                    Console.WriteLine("Type your game file's name");
+                    Console.WriteLine("Type your goals file's name");
                     filename = Console.ReadLine();
                     LoadGame(filename);
                 break;

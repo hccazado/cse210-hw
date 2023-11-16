@@ -17,6 +17,11 @@ class SimpleGoal : Goal
         }
     }
 
+    public override string GoalSavingData()
+    {
+        return $"SimpleGoal;{_goal};{_description};{_points};{_isComplete}";
+    }
+
     public override int GoalEvent()
     {
         if (_isComplete)

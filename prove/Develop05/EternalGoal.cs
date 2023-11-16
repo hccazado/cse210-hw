@@ -14,10 +14,26 @@ class EternalGoal : Goal
         return $"( ) {_goal} - {_description} : worths {_points} points. Accomplished: {_accomplishments} times.";
     }
 
+    public override string GoalSavingData()
+    {
+        return $"EternalGoal;{_goal};{_description};{_points};{_isComplete};{_accomplishments}";
+    }
+
     public override int GoalEvent()
     {
-        _accomplishments ++;
-        return _points;
+        string answer;
+        Console.WriteLine($"Have you '{_goal}' today?\n1 - yes\n2 - no");
+        answer = Console.ReadLine();
+        if(answer == "1" || answer == "yes")
+        {
+            _accomplishments ++;
+            return _points;
+        }
+        else
+        {
+            return Penaltie();
+        }
+        
     }
 
     public int Penaltie()

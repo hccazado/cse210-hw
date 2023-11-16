@@ -21,6 +21,11 @@ class CheckListGoal : Goal
         }
     }
 
+    public override string GoalSavingData()
+    {
+        return $"CheckListGoal;{_goal};{_description};{_points};{_isComplete};{_currentAccomplishments};{_desiredAccomplishments};{_bonusPoints}";
+    }
+
     public override int GoalEvent()
     {
         int returnPoints = 0;
@@ -32,12 +37,12 @@ class CheckListGoal : Goal
         {
             _currentAccomplishments++;
                 
-            returnPoints = _points;
+            returnPoints = _bonusPoints;
                 
             if(_currentAccomplishments == _desiredAccomplishments)
             {
                 _isComplete = true;
-                returnPoints += _bonusPoints;
+                returnPoints += _points;
             }
         }
         return returnPoints;
