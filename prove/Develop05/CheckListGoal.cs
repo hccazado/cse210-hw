@@ -11,6 +11,7 @@ class CheckListGoal : Goal
     }
 
     public override string DescribeGoal()
+    //overriding and defining an adequate function scope for describing the goal
     {
         if (_isComplete)
         {
@@ -22,11 +23,13 @@ class CheckListGoal : Goal
     }
 
     public override string GoalSavingData()
+    //overriding and defining an adequate function scope for returning goal's saving data
     {
         return $"CheckListGoal;{_goal};{_description};{_points};{_isComplete};{_currentAccomplishments};{_desiredAccomplishments};{_bonusPoints}";
     }
 
     public override int GoalEvent()
+    //overriding and defining an adequate function scope for accomplishing the goal
     {
         int returnPoints = 0;
         if (_isComplete)

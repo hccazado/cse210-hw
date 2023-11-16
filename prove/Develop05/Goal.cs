@@ -20,9 +20,4 @@ abstract class Goal
     public abstract int GoalEvent();
 
     public abstract string GoalSavingData();
-
-    public bool IsComplete()
-    {
-        return _isComplete;
-    }
 }

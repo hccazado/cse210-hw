@@ -7,6 +7,7 @@ class SimpleGoal : Goal
     }
 
     public override string DescribeGoal()
+    //overriding and defining an adequate function scope for describing the goal
     {
         if (_isComplete)
         {
@@ -18,11 +19,13 @@ class SimpleGoal : Goal
     }
 
     public override string GoalSavingData()
+    //overriding and defining an adequate function scope for returning goal's saving data
     {
         return $"SimpleGoal;{_goal};{_description};{_points};{_isComplete}";
     }
 
     public override int GoalEvent()
+    //overriding and defining an adequate function scope for accomplishing the goal
     {
         if (_isComplete)
         {

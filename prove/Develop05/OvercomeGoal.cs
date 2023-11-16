@@ -1,36 +1,40 @@
-using System.Runtime.InteropServices;
+using System.Drawing;
 
-class EternalGoal : Goal 
+class OvercomeGoal : Goal
 {
-    int _accomplishments;
-
-    public EternalGoal (string goal, string description, int points, bool isComplete, int accomplishments) : base(goal, description, points, isComplete)
+    public OvercomeGoal(string goal, string description, int points, bool isComplete) : base(goal, description, points, isComplete)
     {
-        _accomplishments = accomplishments;
     }
 
     public override string DescribeGoal()
     //overriding and defining an adequate function scope for describing the goal
     {
-        return $"( ) {_goal} - {_description} : worths {_points} points. Accomplished: {_accomplishments} times.";
+        if (_isComplete)
+        {
+            return $"(X) {_goal} - {_description} : worths -{_points} points";
+        }
+        else{
+            return $"( ) {_goal} - {_description} : worths -{_points} points";
+        }
     }
 
     public override string GoalSavingData()
     //overriding and defining an adequate function scope for returning goal's saving data
     {
-        return $"EternalGoal;{_goal};{_description};{_points};{_isComplete};{_accomplishments}";
+        return $"OvercomeGoal;{_goal};{_description};{_points};{_isComplete}";
     }
 
     public override int GoalEvent()
     //overriding and defining an adequate function scope for accomplishing the goal
     {
         string answer;
-        Console.WriteLine($"Have you '{_goal}' today?\n1 - yes\n2 - no");
+        Console.WriteLine($"Have you overcome '{_goal}'?\n1 - yes\n2 - no");
         answer = Console.ReadLine();
         if(answer == "1" || answer == "yes")
+        //set goal as complete and return twice points amount as prize
         {
-            _accomplishments ++;
-            return _points;
+            _isComplete = true;
+            return 2 * _points;
         }
         else
         {

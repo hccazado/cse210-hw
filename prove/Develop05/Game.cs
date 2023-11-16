@@ -12,29 +12,40 @@ class Game
         _totalPoints = 0;
     }
 
-    private void SimpleGoal(string goal, string description, int points, bool isComplete)
+    private void NewSimpleGoal(string goal, string description, int points, bool isComplete)
+    //Instantiates a new instance of SimpleGoal and add to _goals list. Used by NewGoal and LoadGame methods
     {
         SimpleGoal simpleGoal = new SimpleGoal(goal, description, points, isComplete);
         
         _goals.Add(simpleGoal);
     }
 
-    private void EternalGoal(string goal, string description, int points, bool isComplete, int accomplishments)
+    private void NewEternalGoal(string goal, string description, int points, bool isComplete, int accomplishments)
+    //Instantiates a new instance of EternalGoal and add to _goals list. Used by NewGoal and LoadGame methods
     {            
         EternalGoal eternalGoal = new EternalGoal(goal, description, points, isComplete, accomplishments);
         
         _goals.Add(eternalGoal);
     }
     
-    private void CheckListGoal(string goal, string description, int points, bool isComplete, int bonusPoints, int desiredAccomplishments, int currentAccomplishments)
-    {
-        
+    private void NewCheckListGoal(string goal, string description, int points, bool isComplete, int bonusPoints, int desiredAccomplishments, int currentAccomplishments)
+    //Instantiates a new instance of CheckListGoal and add to _goals list. Used by NewGoal and LoadGame methods
+    {    
         CheckListGoal checkListGoal = new CheckListGoal(goal,description,points,isComplete,bonusPoints, desiredAccomplishments,currentAccomplishments);
         
         _goals.Add(checkListGoal);
     }
 
+    private void NewOvercomeGoal(string goal, string description, int points, bool isComplete)
+    //Instantiates a new instance of SimpleGoal and add to _goals list. Used by NewGoal and LoadGame methods
+    {
+        OvercomeGoal overcomeGoal = new OvercomeGoal(goal, description, points, isComplete);
+        
+        _goals.Add(overcomeGoal);
+    }
+
     public void NewGoal()
+    //Asks user desired its desired goal and its related data for passing as parameters to the adequate new goal method
     {
         string goal;
         string description;
@@ -44,6 +55,7 @@ class Game
 
 
         void GoalCommonData()
+        //collects from user basic data for every goal
         {
             Console.WriteLine("Type the name of your goal:");
             goal = Console.ReadLine();
@@ -51,12 +63,13 @@ class Game
             Console.WriteLine("Type a small decription for your goal:");
             description = Console.ReadLine();
             
-            Console.WriteLine("Type how many points for this goal:");
+            Console.WriteLine("Type how many points for this goal (overcoming bad habits will assume a negative meaning):");
             string strPoints = Console.ReadLine();
             points = int.Parse(strPoints);
         }
 
         void CheckListSpecificData()
+        //Asks user specific data for a checklist goal
         {
             Console.WriteLine("How many times do you want to accomplish this goal:");
             string input = Console.ReadLine();
@@ -71,6 +84,7 @@ class Game
         Console.WriteLine("1 - Simple goal");
         Console.WriteLine("2 - Eternal goal");
         Console.WriteLine("3 - Check list goal");
+        Console.WriteLine("4 - Overcome bad habits goal");
         Console.WriteLine("q - Cancel");
 
         Console.Write("> ");
@@ -80,19 +94,24 @@ class Game
             case "1":
                 GoalCommonData();
 
-                SimpleGoal(goal, description, points, false);
+                NewSimpleGoal(goal, description, points, false);
             break;
             case "2":
                 GoalCommonData();
 
-                EternalGoal(goal, description, points, false, 0);
+                NewEternalGoal(goal, description, points, false, 0);
             break;
             case "3":
                 GoalCommonData();
 
                 CheckListSpecificData();
 
-                CheckListGoal(goal, description, points, false, bonusPoints, desiredAccomplishments, 0);
+                NewCheckListGoal(goal, description, points, false, bonusPoints, desiredAccomplishments, 0);
+            break;
+            case "4":
+                GoalCommonData();
+
+                NewOvercomeGoal(goal, description, points, false);
             break;
 
             case "q":
@@ -106,23 +125,33 @@ class Game
     }
 
     public void EventGoal()
+    //displays all user's goals and asks for a goal to register its accomplishment.
     {
-        string input;
-        
-        Console.Clear();
-        
-        ListGoals();
+        if (_goals.Count >= 1)
+        {
+            string input;
+            
+            Console.Clear();
+            
+            ListGoals();
 
-        Console.WriteLine("Type the goal's number you want to record and accomplishment");
+            Console.WriteLine("\nType the goal's number you want to record an accomplishment");
 
-        input = Console.ReadLine();
+            input = Console.ReadLine();
 
-        int index = int.Parse(input);
+            int index = int.Parse(input);
 
-        _totalPoints += _goals[index - 1].GoalEvent();
+            _totalPoints += _goals[index - 1].GoalEvent();
+        }
+        else
+        {
+            Console.WriteLine("Sorry, you still not have any goals!\nPress any key to continue.");
+            Console.ReadLine();
+        }
     }
 
     public void ListGoals()
+    //Displays all user's goals by calling DescribeGoal method from every goal
     {
         if (_goals.Count == 0)
         {
@@ -138,6 +167,7 @@ class Game
     }
 
     public void SaveGame(string fileName)
+    //Writes game totalpoints into 1st line and all goals from _goals into a .txt file
     {
         using(StreamWriter output = new StreamWriter(fileName+".txt"))
         {
@@ -150,6 +180,7 @@ class Game
     }
 
     public void LoadGame(string filename)
+    //loads game totalpoints and adds call the appropriate New[goal] method.
     {
         string goal;
         string description;
@@ -163,8 +194,12 @@ class Game
 
         _totalPoints = int.Parse(lines[0]);
         
+        //clearing list before adding items
+        _goals.Clear();
+        
         for(int i = 1; i< lines.Length; i++)
         {
+            //splitting line content and attribuiting variables values
             string[] splitLine = lines[i].Split(";");
             goal = splitLine[1].ToString();
             description = splitLine[2].ToString();
@@ -173,13 +208,17 @@ class Game
 
             if (splitLine[0].Equals("SimpleGoal"))
             {
-                SimpleGoal(goal, description, points, isComplete);
+                NewSimpleGoal(goal, description, points, isComplete);
+            }
+            else if (splitLine[0].Equals("OvercomeGoal"))
+            {
+                NewOvercomeGoal(goal, description, points, isComplete);
             }
             else if(splitLine[0].Equals("EternalGoal"))
             {
                 currentAccomplishments = int.Parse(splitLine[5].ToString());
                 
-                EternalGoal(goal, description, points, isComplete, currentAccomplishments);
+                NewEternalGoal(goal, description, points, isComplete, currentAccomplishments);
             }
             else if(splitLine[0].Equals("CheckListGoal"))
             {
@@ -189,12 +228,13 @@ class Game
                 
                 bonusPoints = int.Parse(splitLine[7].ToString());
 
-                CheckListGoal(goal, description, points, isComplete, bonusPoints, desiredAccomplishments, currentAccomplishments);
+                NewCheckListGoal(goal, description, points, isComplete, bonusPoints, desiredAccomplishments, currentAccomplishments);
             }
         }
     }
 
     public void Menu()
+    //Game main menu. Displays options and user totalpoints.
     {
         string option = "9";
         while (option != "q")
