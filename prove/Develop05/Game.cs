@@ -79,7 +79,7 @@ class Game
             input = Console.ReadLine();
             bonusPoints = int.Parse(input);
         }
-
+        Console.Clear();
         Console.WriteLine("Select which type of goal do you want to create:");
         Console.WriteLine("1 - Simple goal");
         Console.WriteLine("2 - Eternal goal");
@@ -244,7 +244,7 @@ class Game
             Console.WriteLine($"\t\t\tCurrent points: {_totalPoints}");
             Console.WriteLine("1 - List goals");
             Console.WriteLine("2 - New goal");
-            Console.WriteLine("3 - Goal Accomplished");
+            Console.WriteLine("3 - Goal Event");
             Console.WriteLine("4 - Save goals");
             Console.WriteLine("5 - Load goals");
             Console.WriteLine("q - Exit program\n");
