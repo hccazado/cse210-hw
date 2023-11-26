@@ -1,0 +1,4 @@
+class IllnessDiagnostic : Diagnostic
+{
+    
+}
