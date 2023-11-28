@@ -52,6 +52,26 @@ class PatientPerson : Person
         DateOnly date = DateOnly.FromDateTime(DateTime.Now);
         
         Immunization immunization = new Immunization(description, place, date, currentDosis, isComplete, targetDosis);
+
+        _immunizations.Add(immunization);
+    }
+
+    public void AddAllergy(string description, string snomed=null, string icd=null)
+    {
+        Allergy allergy = new Allergy(description,snomed,icd);
+        _allergies.Add(allergy);
+    }
+
+    public void AddMedication(DateOnly date, string description, string administration, string dosis, string snomed = null)
+    {
+        Medication medication = new Medication(date, description, administration, dosis, snomed);
+        _medications.Add(medication);
+    }
+
+    public void AddClinicalHistory(int id, DateOnly date, ProfessionalPerson doctor, string reasonVisit, double temperature, string bp, string pe, MedicalProblemDiagnostic medicalProblem, List<Medication> medications)
+    {
+        ClinicalHistory history = new ClinicalHistory(id, date, doctor, reasonVisit, temperature, bp, pe, medicalProblem, medications);
+        _clinicalHistories.Add(history);
     }
 
     override public string GetPersonSpecificData()
@@ -63,4 +83,5 @@ class PatientPerson : Person
 
         return $"{_healthProvider}: {_healthProviderId}";
     }
+
 }
