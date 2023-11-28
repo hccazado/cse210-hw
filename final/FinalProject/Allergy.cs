@@ -45,7 +45,7 @@ class Allergy
     {
         if (_snomedCtId != null && _icd10 != null)
         {
-            return $"Snomed CT: {_snomedCtId} - ICD10: {_icd10} - Desc: {_description}";
+            return $"SnomedCT: {_snomedCtId} - ICD10: {_icd10} - Desc: {_description}";
         }
 
         else if(_snomedCtId == null)
@@ -55,7 +55,7 @@ class Allergy
 
         else
         {
-            return $"Snomed CT: {_snomedCtId} - Desc: {_description}";
+            return $"SnomedCT: {_snomedCtId} - Desc: {_description}";
         }
     }
 }

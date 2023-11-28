@@ -5,14 +5,16 @@ class Address
     private string _zip;
     private string _city;
     private string _state;
+    private string _country;
 
-    public Address (string address, string number, string zip, string city, string state)
+    public Address (string address, string number, string city, string state, string zip, string country=null)
     {
         _address = address;
         _number = number;
         _zip = zip;
         _city = city;
         _state = state;
+        _country = country;
     }
 
     public void SetAddress(string address)
@@ -40,8 +42,18 @@ class Address
         _state = state;
     }
 
+    public void SetCountry(string country)
+    {
+        _country = country;
+    }
+
     public string GetAddress()
     {
+        if (_country != null)
+        {
+            return $"{_number},{_address} - {_city}, {_state} - {_zip} - {_country}";
+        }
+
         return $"{_number},{_address} - {_city}, {_state} - {_zip}";
     }
 }
