@@ -41,4 +41,13 @@ abstract class Person
         return _address.GetAddress();
     }
 
+    public bool ComparePerson(string document)
+    {
+        if(document == _document)
+        {
+            return true;
+        }
+        return false;
+    }
+
 }

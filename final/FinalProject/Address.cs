@@ -17,6 +17,16 @@ class Address
         _country = country;
     }
 
+    public Address()
+    {
+        _address = "NA";
+        _number = "-99";
+        _zip = "S2000";
+        _city = "NA";
+        _state = "NA";
+        _country = "AR";
+    }
+
     public void SetAddress(string address)
     {
         _address = address;
