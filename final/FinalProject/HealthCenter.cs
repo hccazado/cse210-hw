@@ -192,7 +192,7 @@ class HealthCenter
         Console.WriteLine("Patient's Health Provider:");
         string hProvider = Console.ReadLine();
 
-        Console.WriteLine("Patient's Health Provider ID:");
+        Console.WriteLine("Patient's Health Provider ID (0 for none):");
         int hProviderId = int.Parse(Console.ReadLine());        
         
         Console.WriteLine("Patient's ART");
