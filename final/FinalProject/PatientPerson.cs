@@ -1,3 +1,4 @@
+using System.Globalization;
 class PatientPerson : Person
 {
     private string _healthProvider;
@@ -5,7 +6,7 @@ class PatientPerson : Person
     private string _art;
     private List<Immunization> _immunizations;
     private List<Allergy> _allergies;
-    private List<Diagnostic> _problems;
+    private List<IllnessDiagnostic> _illnesses;
     private List<Medication> _medications;
     private List<ClinicalHistory> _clinicalHistories;
 
@@ -17,7 +18,7 @@ class PatientPerson : Person
 
         _immunizations = new List<Immunization>();
         _allergies = new List<Allergy>();
-        _problems = new List<Diagnostic>();
+        _illnesses = new List<IllnessDiagnostic>();
         _medications = new List<Medication>();
         _clinicalHistories = new List<ClinicalHistory>();
     }
@@ -47,6 +48,38 @@ class PatientPerson : Person
         return _allergies;
     }
 
+    public void DisplayImmunizations()
+    {
+        foreach(var immunization in _immunizations)
+        {
+            Console.WriteLine(immunization.GetImmunization());
+        }
+    }
+
+    public void DisplayMedications()
+    {
+        foreach(var medication in _medications)
+        {
+            Console.WriteLine(medication.GetMedication());
+        }
+    }
+
+    public void DisplayAllergies()
+    {
+        foreach(var allergy in _allergies)
+        {
+            Console.WriteLine(allergy.GetAllergy());
+        }
+    }
+
+    public void DisplayIllnesses()
+    {
+        foreach(var illness in _illnesses)
+        {
+            Console.WriteLine(illness.GetDiagnostic());
+        }
+    }
+
     public void AddImmunization(string description, string place, int targetDosis, int currentDosis, bool isComplete)
     {
         DateOnly date = DateOnly.FromDateTime(DateTime.Now);
@@ -68,10 +101,35 @@ class PatientPerson : Person
         _medications.Add(medication);
     }
 
-    public void AddClinicalHistory(int id, DateOnly date, ProfessionalPerson doctor, string reasonVisit, double temperature, string bp, string pe, MedicalProblemDiagnostic medicalProblem, List<Medication> medications)
+    public void AddIllness(string description, DateOnly date, bool isActive, string snomed=null, string icd=null, DateOnly finishDate = default)
     {
+        IllnessDiagnostic illness = new IllnessDiagnostic(description, date, isActive, snomed=null, icd=null, finishDate = default);
+        _illnesses.Add(illness);
+    }
+
+    
+    public void AddClinicalHistory(DateOnly date, ProfessionalPerson doctor, string reasonVisit, double temperature, string bp, string pe, MedicalProblemDiagnostic medicalProblem, List<Medication> medications, int id=default)
+    {
+        if(id.Equals(default)){
+            id = _clinicalHistories.Count + 1;
+        }
         ClinicalHistory history = new ClinicalHistory(id, date, doctor, reasonVisit, temperature, bp, pe, medicalProblem, medications);
         _clinicalHistories.Add(history);
+    }
+
+    public string DisplayClinicalHistory(int id=-1)
+    {
+        ClinicalHistory history;
+        if (id == -1)
+        {
+            history = _clinicalHistories.Last();
+            return history.GetSummary();
+        }
+        else
+        {
+            history = _clinicalHistories.Find(item => item.CompareId(id));
+            return history.GetSummary();
+        }
     }
 
     override public string GetPersonSpecificData()
@@ -82,6 +140,11 @@ class PatientPerson : Person
         }
 
         return $"{_healthProvider}: {_healthProviderId}";
+    }
+
+    public string GetPersonalData()
+    {
+        return GetPerson();
     }
 
 }

@@ -14,7 +14,7 @@ abstract class Person
         _dob = dob;
     }
 
-    public string GetPerson()
+    protected string GetPerson()
     {
         return $"{_name} - Birthday: {_dob} - {_documentType}: {_document}";
     }

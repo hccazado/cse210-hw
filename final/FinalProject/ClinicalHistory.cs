@@ -58,6 +58,15 @@ class ClinicalHistory
         }
     }
 
+    public bool CompareId(int id)
+    {
+        if (id == _id)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public string GetSummary()
     {
         return $"ID:{_id} - Date: {_date}.\nReason of Visit: {_reasonVisit}\nDiagnostic: {_medicalProblem.GetDiagnostic}\nMedication: {DisplayMedications}";

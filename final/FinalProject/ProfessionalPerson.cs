@@ -37,7 +37,11 @@ class ProfessionalPerson : Person
         else
         {
             return $"{_professionalActivity}: {_professionalRegister} - Inactive Health promoter";
-        }
-        
+        }  
+    }
+
+    public string GetPersonalData()
+    {
+        return GetPerson();
     }
 }
