@@ -1,6 +1,7 @@
 using System.ComponentModel.Design;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 
 class HealthCenter
 {
@@ -20,39 +21,83 @@ class HealthCenter
     public void Menu()
     {
         string choice = "0";
-        string document;
 
         void PatientMenu(){
-            Console.WriteLine("\t\tPatient Options");
-            Console.WriteLine("1 - New Medication");
-            Console.WriteLine("2 - New Allergy");
-            Console.WriteLine("3 - New Illness");
-            Console.WriteLine("4 - New Clinical History");
-            Console.WriteLine("0 - Return\n");
-            Console.Write("Choice: ");
-
-            choice = Console.ReadLine();
-
-            switch (choice)
+            if(_currentPatient != null)
             {
-                case "1":
-                    PatientNewMedication();
-                break;
-                case "2":
-                    PatientNewAllergy();
-                break;
-                case "3":
-                    PatientNewIllness();
-                break;
-                case "4":
-                    PatientNewClinicalHistory();
-                break;
-                case "0":
-                break;
-                default:
-                    Console.WriteLine("Invalid option! Returning to main menu.\nPress any key to continue");
-                    Console.ReadKey();
-                break; 
+                Console.WriteLine("\tPatient Options");
+                DisplayPatientData();
+
+                Console.WriteLine("1  - New Medication");
+                Console.WriteLine("2  - New Allergy");
+                Console.WriteLine("3  - New Illness");
+                Console.WriteLine("4  - New Immunization");
+                Console.WriteLine("5  - Add Immunization Dosis");
+                Console.WriteLine("6  - New Clinical History");
+                Console.WriteLine("7  - Display Patient's Allergies");
+                Console.WriteLine("8  - Display Patient's Medical Problems");
+                Console.WriteLine("9  - Display Patient's Medications");
+                Console.WriteLine("10 - Display Patient's Immunizations");
+                Console.WriteLine("11 - Display Patient's Latest Clinical History");
+                Console.WriteLine("0  - Return\n");
+                Console.Write("Choice: ");
+
+                choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        PatientNewMedication();
+                    break;
+                    case "2":
+                        PatientNewAllergy();
+                    break;
+                    case "3":
+                        PatientNewIllness();
+                    break;
+                    case "4":
+                        PatientNewImmunization();
+                    break;
+                    case "5":
+                        PatientAddImmunizationDosis();
+                    break;
+                    case "6":
+                        if(_currentDoctor != null && _currentDoctor.isActive())
+                        {   
+                            PatientNewClinicalHistory();
+                        }
+                        else
+                        {
+                            Console.WriteLine("An active doctor must be selected for this action! Press any key to continue.");
+                            Console.ReadKey();
+                        }
+                    break;
+                    case "7":
+                        DisplayPatientAllergies();
+                    break;
+                    case "8":
+                        DisplayPatientIllnesses();
+                    break;
+                    case "9":
+                        DisplayPatientMedications();
+                    break;
+                    case "10":
+                        DisplayPatientImmunizations();
+                    break;
+                    case "11":
+                        DisplayPatientClinicalHistories();
+                    break;
+                    case "q":
+                    break;
+                    default:
+                        Console.WriteLine("Invalid option! Returning to main menu.\nPress any key to continue");
+                        Console.ReadKey();
+                    break; 
+                }
+            }
+            else{
+                Console.WriteLine("There is no selected patient! Press any key to return");
+                Console.ReadKey();
             }
         }
 
@@ -62,8 +107,8 @@ class HealthCenter
             Console.WriteLine("2 - New Doctor");
             Console.WriteLine("3 - Enable current Doctor");
             Console.WriteLine("4 - Disable current Doctor");
-            Console.WriteLine("5 - Save System State");
-            Console.WriteLine("6 - Load System State");
+            Console.WriteLine("5 - Select A New Patient");
+            Console.WriteLine("6 - Select A New Doctor");
             Console.WriteLine("0 - Return\n");
             Console.Write("Choice: ");
 
@@ -82,7 +127,7 @@ class HealthCenter
                 case "3":
                     if (_currentDoctor != null)
                     {
-                        Console.WriteLine($"Are sure about ENABLING (Y / N):\nDr {_currentDoctor.GetPersonalData}\n");
+                        Console.WriteLine($"Are sure about ENABLING (Y / N):\nDr {_currentDoctor.GetPersonalData()}\n");
                         Console.Write("Choice: ");
                         string agreed = Console.ReadLine();
                         if (agreed.Equals("Y"))
@@ -101,7 +146,7 @@ class HealthCenter
                 case "4":
                     if (_currentDoctor != null)
                     {
-                        Console.WriteLine($"Are sure about DISABLING (Y / N):\nDr {_currentDoctor.GetPersonalData}\n");
+                        Console.WriteLine($"Are sure about DISABLING (Y / N):\nDr {_currentDoctor.GetPersonalData()}\n");
                         Console.Write("Choice: ");
                         string agreed = Console.ReadLine();
                         if (agreed.Equals("Y"))
@@ -118,8 +163,10 @@ class HealthCenter
                     }        
                 break;
                 case "5":
+                    SelectPatient();
                 break;
                 case "6":
+                    SelectDoctor();
                 break;
                 case "0":
                 break;
@@ -136,13 +183,8 @@ class HealthCenter
             Console.Clear();
             Console.WriteLine("\t\tIntegrated Public Health System\n");
             Console.WriteLine("1 - System Management");
-            Console.WriteLine("2 - Find a Doctor");
-            Console.WriteLine("3 - Find a Patient");
-            Console.WriteLine("4 - Patient Options");
-            Console.WriteLine("5 - Display Patient's Allergies");
-            Console.WriteLine("6 - Display Patient's Medical Problems");
-            Console.WriteLine("7 - Display Patient's Medications");
-            Console.WriteLine("8 - Display Patient's Last Clinical History\n");
+            Console.WriteLine("2 - Patient's Menu");
+            Console.WriteLine("3 - Display Curent Doctor's Data");
             Console.WriteLine("q - Quit System\n");
             Console.Write("Choice: ");
 
@@ -154,31 +196,10 @@ class HealthCenter
                     ManagementMenu();
                 break;
                 case "2":
-                    Console.WriteLine("Type doctor's document:");
-                    document = Console.ReadLine();
-                    FindDoctor(document); 
-                break;
-                case "3":
-                    Console.WriteLine("Type patient's document:");
-                    document = Console.ReadLine(); 
-                    FindPatient(document);
-                break;
-                case "4":
                     PatientMenu();
                 break;
-                case "5":
-                    DisplayPatientAllergies();
-                break;
-                case "6":
-                    DisplayPatientIllnesses();
-                break;
-                case "7":
-                    DisplayPatientMedications();
-                break;
-                case "8":
-                    Console.WriteLine("Type a Clinical History to display or -1 for the last one:");
-                    int option = int.Parse(Console.ReadLine());
-                    DisplayPatientClinicalHistory(option);
+                case "3":
+                    DisplayDoctor();
                 break;
                 case "q":
                 case "quit":
@@ -193,33 +214,10 @@ class HealthCenter
         }
     }
 
-    private void FindDoctor(string document)
+    private PatientPerson NewPatientData()
     {
-
-        Console.WriteLine(_doctors.Find(doctor => doctor.ComparePerson(document)));
-        /*foreach(var doctor in _doctors)
-        {
-            if (doctor.ComparePerson(document))
-            {
-                _currentDoctor = doctor;
-            }   
-        }*/
-    }
-
-    private void FindPatient(string document)
-    {
-        Console.WriteLine(_patients.Find(patient => patient.ComparePerson(document)));
-
-        /*foreach(var patient in _patients)
-        {
-            if (patient.ComparePerson(document))
-            {
-                _currentPatient = patient;
-            }   
-        }*/
-    }
-
-    private PatientPerson NewPatientData(){
+        Console.Clear();
+        Console.WriteLine("\tAdding New Patient");
         Console.WriteLine("Patient's name:");
         string name = Console.ReadLine();
 
@@ -232,19 +230,21 @@ class HealthCenter
         Console.WriteLine("Patient's document number:");
         string document = Console.ReadLine();
 
-        Console.WriteLine("Patient's Health Provider:");
+        Console.WriteLine("Patient's Health Provider (NA for none):");
         string hProvider = Console.ReadLine();
 
         Console.WriteLine("Patient's Health Provider ID (0 for none):");
         int hProviderId = int.Parse(Console.ReadLine());        
         
-        Console.WriteLine("Patient's ART");
+        Console.WriteLine("Patient's ART (blank for none)");
         string art = Console.ReadLine();
 
         return NewPatient(name, document, docType, dob, hProvider, hProviderId, art);        
     }
 
     private ProfessionalPerson NewDoctorData(){
+        Console.Clear();
+        Console.WriteLine("\tAdding New Doctor");
         Console.WriteLine("Doctor's name:");
         string name = Console.ReadLine();
 
@@ -268,7 +268,9 @@ class HealthCenter
 
     private void PersonNewAddress(Person person)
     {
-        Console.WriteLine("Address:");
+        Console.Clear();
+        Console.WriteLine($"\tAdding person address");
+        Console.WriteLine("street:");
         string address = Console.ReadLine();
 
         Console.WriteLine("Number:");
@@ -312,14 +314,36 @@ class HealthCenter
         return newDoctor;
     }
     
-    private void LoadPatients(string filename)
+    private void SelectPatient()
     {
+        if( _patients.Count > 0)
+        {
+            for (int i = 0; i < _patients.Count; i++)
+            {
+                Console.WriteLine($"{i+1} - {_patients[i].GetPersonalData()} - {_patients[i].GetPersonSpecificData()}");
+            }
+            Console.Write("Patient number: ");
 
+            int option = int.Parse(Console.ReadLine()); 
+
+            _currentPatient = _patients[option-1];
+        }
     }    
     
-    private void LoadDoctors(string filename)
+    private void SelectDoctor()
     {
+        if( _doctors.Count > 0)
+        {
+            for (int i = 0; i < _doctors.Count; i++)
+            {
+                Console.WriteLine($"{i+1} - {_doctors[i].GetPersonalData()} - {_doctors[i].GetPersonSpecificData()}");
+            }
+            Console.Write("Doctor number: ");
 
+            int option = int.Parse(Console.ReadLine()); 
+
+            _currentDoctor = _doctors[option-1];
+        }
     } 
 
     private void DisplayPatientData()
@@ -332,11 +356,9 @@ class HealthCenter
         else
         {
             Console.Clear();
-            Console.WriteLine("Patient:");
-            Console.WriteLine(_currentPatient.GetPersonalData());
-            Console.WriteLine(_currentPatient.GetPersonSpecificData());
-            Console.WriteLine("Press any key to continue.");
-            Console.ReadKey();
+            Console.WriteLine("------------------Patient-------------------");
+            Console.WriteLine($"{_currentPatient.GetPersonalData()}\n{_currentPatient.GetPersonSpecificData()}");
+            Console.WriteLine("---------------------------------------------");
         }
     }
 
@@ -350,9 +372,9 @@ class HealthCenter
         else
         {
             Console.Clear();
-            Console.WriteLine("Doctor:");
-            Console.WriteLine(_currentDoctor.GetPersonalData());
-            Console.WriteLine(_currentDoctor.GetPersonSpecificData());
+            Console.WriteLine("------------------Doctor---------------------");
+            Console.WriteLine($"{_currentDoctor.GetPersonalData()}\n{_currentDoctor.GetPersonSpecificData()}");
+            Console.WriteLine("---------------------------------------------");
             Console.WriteLine("Press any key to continue.");
             Console.ReadKey();
         }
@@ -362,18 +384,69 @@ class HealthCenter
     {
         Console.Clear();
         Console.WriteLine("Patient Allergies:");
+
         _currentPatient.DisplayAllergies();
+
         Console.WriteLine("Press any key to continue.");
         Console.ReadKey();
     }
 
     private void DisplayPatientImmunizations()
     {
+
         Console.Clear();
         Console.WriteLine("Patient Immunizations:");
         _currentPatient.DisplayImmunizations();
         Console.WriteLine("Press any key to continue.");
         Console.ReadKey();
+    }
+
+    private void PatientNewImmunization()
+    {
+        bool isComplete;
+        Console.Clear();
+        Console.WriteLine("\tAdding Patient's New Immunization");
+        
+        DateOnly date = DateOnly.Parse(DateTime.Now.ToString("dd/MM/yyy"));
+        
+        Console.WriteLine("Description:");
+        string description = Console.ReadLine();
+
+        Console.WriteLine("place:");
+        string place = Console.ReadLine();
+
+        Console.WriteLine("current dosis:");
+        int currentDosis = int.Parse(Console.ReadLine());
+
+        Console.WriteLine("target dosis:");
+        int targetDosis = int.Parse(Console.ReadLine());
+
+        Console.WriteLine("is the schema complete (y/n):");
+        string complete = Console.ReadLine();
+
+        if (complete == "y" || complete == "Y")
+        {
+            isComplete = true;
+        }
+        else
+        {
+            isComplete = false;
+        }
+
+        AddPatientImmunization(description, place, targetDosis, currentDosis, isComplete);
+    }
+
+    private void PatientAddImmunizationDosis()
+    {
+        int immunizationIdx;
+
+        Console.Clear();
+        _currentPatient.DisplayImmunizations();
+
+        Console.WriteLine("Type Immunization number to add a dosis:");
+        immunizationIdx = int.Parse(Console.ReadLine());
+
+        _currentPatient.AddImmunizationDosis(immunizationIdx -1);
     }
 
     private void DisplayPatientMedications()
@@ -394,12 +467,25 @@ class HealthCenter
         Console.ReadKey();
     }
 
-    private void DisplayPatientClinicalHistory(int id = -1)
+    private void DisplayPatientClinicalHistories()
     {
-        _currentPatient.DisplayClinicalHistory(id);
+        List<ClinicalHistory> histories = _currentPatient.GetClinicalHistories();
+        Console.Clear();
+        Console.WriteLine("Patient Clical Histories:\n");
+
+        foreach(var history in histories)
+        {
+            Console.WriteLine(history.GetSummary());
+        }
+        
+        Console.WriteLine("\nPress any key to continue.");
+        Console.ReadKey();
     }
+
     private void PatientNewAllergy()
     {
+        Console.Clear();
+        Console.WriteLine("\tAdding Patient's New Allergy");
         Console.WriteLine("Description:");
         string description = Console.ReadLine();
 
@@ -417,9 +503,16 @@ class HealthCenter
         _currentPatient.AddAllergy(description, snomed, icd);
     }
 
+    private void AddPatientImmunization(string description, string place, int targetDosis, int currentDosis, bool isComplete)
+    {
+        _currentPatient.AddImmunization(description, place, targetDosis, currentDosis, isComplete);
+    }
+
     private void PatientNewMedication()
     {
-        Console.WriteLine("Medication Starting Date (30/01/2010):");
+        Console.Clear();
+        Console.WriteLine("\tAdding Patient's New Medication");
+        Console.WriteLine("Medication Starting Date (dd/mm/yyyy):");
         DateOnly date = DateOnly.ParseExact(Console.ReadLine(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
         Console.WriteLine("Description:");
@@ -443,7 +536,9 @@ class HealthCenter
 
     private void PatientNewIllness()
     {   
-        Console.WriteLine("Illness Starting Date (30/01/2010):");
+        Console.Clear();
+        Console.WriteLine("\tAdding Patient's New Illness Diagnostic");
+        Console.WriteLine("Illness Starting Date (dd/mm/yyyy):");
         DateOnly date = DateOnly.ParseExact(Console.ReadLine(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
         Console.WriteLine("Description:");
@@ -464,7 +559,7 @@ class HealthCenter
         }
         else
         {
-            Console.WriteLine("Illness Finish Date (30/01/2010):");
+            Console.WriteLine("Illness Finish Date (dd/mm/yyyy):");
             DateOnly finishDate = DateOnly.ParseExact(Console.ReadLine(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
             
             AddPatientIllness(description, date, false, snomed, icd, finishDate);
@@ -484,6 +579,8 @@ class HealthCenter
         
         void Diagnostic()
         {
+            Console.Clear();
+            Console.WriteLine("\tClinical History - Diagnostic");
             Console.WriteLine("Description:");
             string description = Console.ReadLine();
 
@@ -503,8 +600,10 @@ class HealthCenter
             string choice = "y";
             DateOnly date = DateOnly.Parse(DateTime.Now.ToString("dd/MM/yyy"));
 
-            while (choice != "n" || choice != "N")
+            while (choice.Equals("y"))
             {
+                Console.Clear();
+                Console.WriteLine("\tNew Clinical History - Medication");
                 Console.WriteLine("Description:");
                 string description = Console.ReadLine();
 
@@ -521,23 +620,21 @@ class HealthCenter
 
                 medications.Add(medication);
 
-                Console.WriteLine("\nAdd new medication (y/n):");
+                Console.WriteLine("\nAdd a new medication (y/n):");
                 choice = Console.ReadLine();
             }
         }
 
-        Console.WriteLine("\t\tNew Clinical History");
+        Console.Clear();
+        Console.WriteLine("\tNew Clinical History");
         
         Console.WriteLine("Reason of Visit:");
         string reasonVisit = Console.ReadLine();
 
-        Console.WriteLine("Consult date(28/01/2000):");
-        DateOnly date = DateOnly.ParseExact(Console.ReadLine(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-
-        Console.WriteLine("Temperature:");
+        Console.WriteLine("Temperature (°C):");
         double temperature = double.Parse(Console.ReadLine());
 
-        Console.WriteLine("Blood Pressure:");
+        Console.WriteLine("Blood Pressure (12.3/8.7):");
         string bp = Console.ReadLine();
 
         Console.WriteLine("Physical Examination Traits:");
@@ -546,6 +643,8 @@ class HealthCenter
         Diagnostic();
 
         Medications();
+
+        DateOnly date = DateOnly.Parse(DateTime.Now.ToString("dd/MM/yyy"));
 
         AddPatientClinicalHistory(date, _currentDoctor, reasonVisit, temperature, bp, pe, medicalProblem, medications);
     }    

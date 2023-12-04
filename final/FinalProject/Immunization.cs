@@ -19,18 +19,13 @@ class Immunization
 
     public void AddDosis()
     {
-        if (_currentDosis < _targetDosis)
+        _date = DateOnly.Parse(DateTime.Now.ToString("dd/MM/yyy"));
+        
+        _currentDosis +=1;
+
+        if (_currentDosis >= _targetDosis && !_isComplete)
         {
-            _currentDosis +=1;
-        }
-        else if (_currentDosis >= _targetDosis && !_isComplete)
-        {
-            _currentDosis += 1;
-            SetComplete();
-        }
-        else
-        {
-            _currentDosis +=1;
+            _isComplete = true;
         }
     }
 

@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json.Serialization;
 class PatientPerson : Person
 {
     private string _healthProvider;
@@ -50,9 +51,9 @@ class PatientPerson : Person
 
     public void DisplayImmunizations()
     {
-        foreach(var immunization in _immunizations)
+        for (int i = 0; i< _immunizations.Count;i++)
         {
-            Console.WriteLine(immunization.GetImmunization());
+            Console.WriteLine($"{i+1} - {_immunizations[i].GetImmunization()}");
         }
     }
 
@@ -89,6 +90,11 @@ class PatientPerson : Person
         _immunizations.Add(immunization);
     }
 
+    public void AddImmunizationDosis(int id)
+    {
+        _immunizations[id].AddDosis();
+    }
+
     public void AddAllergy(string description, string snomed=null, string icd=null)
     {
         Allergy allergy = new Allergy(description,snomed,icd);
@@ -117,18 +123,18 @@ class PatientPerson : Person
         _clinicalHistories.Add(history);
     }
 
-    public string DisplayClinicalHistory(int id=-1)
+    public string DisplayClinicalHistory()
     {
+
         ClinicalHistory history;
-        if (id == -1)
+        if (_clinicalHistories.Count > 0)
         {
             history = _clinicalHistories.Last();
             return history.GetSummary();
         }
         else
         {
-            history = _clinicalHistories.Find(item => item.CompareId(id));
-            return history.GetSummary();
+            return "Patient doesn't have any clinical history!";
         }
     }
 
@@ -136,10 +142,10 @@ class PatientPerson : Person
     {
         if(_art != null)
         {
-            return $"{_healthProvider}: {_healthProviderId} - ART: {_art}";
+            return $"Coverage: {_healthProvider} - ID:{_healthProviderId} - ART: {_art}";
         }
 
-        return $"{_healthProvider}: {_healthProviderId}";
+        return $"Coverage: {_healthProvider} - ID:{_healthProviderId}";
     }
 
     public string GetPersonalData()

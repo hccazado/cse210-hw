@@ -32,11 +32,11 @@ class ProfessionalPerson : Person
     {
         if(_isActive)
         {
-            return $"{_professionalActivity}: {_professionalRegister} - Active Health promoter";
+            return $"{_professionalActivity}: {_professionalRegister} - Status: Active";
         }
         else
         {
-            return $"{_professionalActivity}: {_professionalRegister} - Inactive Health promoter";
+            return $"{_professionalActivity}: {_professionalRegister} - Status: Inactive";
         }  
     }
 

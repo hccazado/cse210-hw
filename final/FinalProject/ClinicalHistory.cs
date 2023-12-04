@@ -50,12 +50,14 @@ class ClinicalHistory
         return _bloodPressure;
     }
 
-    private void DisplayMedications()
+    private string DisplayMedications()
     {
+        string output = "";
         foreach(var medication in _medications)
         {
-            Console.WriteLine(medication.GetMedication());
+            output += medication.GetMedication() +"\n";
         }
+        return output;
     }
 
     public bool CompareId(int id)
@@ -69,6 +71,6 @@ class ClinicalHistory
 
     public string GetSummary()
     {
-        return $"ID:{_id} - Date: {_date}.\nReason of Visit: {_reasonVisit}\nDiagnostic: {_medicalProblem.GetDiagnostic}\nMedication: {DisplayMedications}";
+        return $"ID:{_id} - Date: {_date}.\nReason of Visit: {_reasonVisit}\nDiagnostic: {_medicalProblem.GetDiagnostic()}\nMedication(s): {DisplayMedications()}";
     }
 }

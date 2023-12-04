@@ -1,4 +1,5 @@
 using System.Dynamic;
+using System.Text.Json.Serialization;
 
 class Medication
 {
@@ -61,11 +62,11 @@ class Medication
     {
         if (_snomedCtId != null)
         {
-            return $"{_description} - {_dosis} - {_administration} - {_date}. SnomedCT: {_snomedCtId}";
+            return $"{_description} - Dosis: {_dosis} - Administration: {_administration} - {_date}. SnomedCT: {_snomedCtId}";
         }
         else
         {
-            return $"{_description} - {_dosis} - {_administration} - {_date}";
+            return $"{_description} - Dosis: {_dosis} - Administration: {_administration} - {_date}";
         }
     }
 }

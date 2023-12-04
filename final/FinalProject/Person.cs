@@ -1,9 +1,15 @@
+using System.Text.Json.Serialization;
 abstract class Person
 {
+    [JsonInclude]
     protected string _name;
+    [JsonInclude]
     protected string _document;
+    [JsonInclude]
     protected string _documentType;
+    [JsonInclude]
     protected DateOnly _dob;
+    [JsonInclude]
     protected Address _address;
 
     public Person(string name, string document, string docType, DateOnly dob)
