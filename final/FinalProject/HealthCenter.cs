@@ -25,6 +25,7 @@ class HealthCenter
         void PatientMenu(){
             if(_currentPatient != null)
             {
+                Console.Clear();
                 Console.WriteLine("\tPatient Options");
                 DisplayPatientData();
 
@@ -34,11 +35,11 @@ class HealthCenter
                 Console.WriteLine("4  - New Immunization");
                 Console.WriteLine("5  - Add Immunization Dosis");
                 Console.WriteLine("6  - New Clinical History");
-                Console.WriteLine("7  - Display Patient's Allergies");
-                Console.WriteLine("8  - Display Patient's Medical Problems");
-                Console.WriteLine("9  - Display Patient's Medications");
-                Console.WriteLine("10 - Display Patient's Immunizations");
-                Console.WriteLine("11 - Display Patient's Latest Clinical History");
+                Console.WriteLine("7  - Display Allergies");
+                Console.WriteLine("8  - Display Illnesses");
+                Console.WriteLine("9  - Display Medications");
+                Console.WriteLine("10 - Display Immunizations");
+                Console.WriteLine("11 - Display Clinical Histories");
                 Console.WriteLine("0  - Return\n");
                 Console.Write("Choice: ");
 
@@ -102,6 +103,7 @@ class HealthCenter
         }
 
         void ManagementMenu(){
+            Console.Clear();
             Console.WriteLine("\t\tManagement Options");
             Console.WriteLine("1 - New Patient");
             Console.WriteLine("2 - New Doctor");
@@ -210,8 +212,8 @@ class HealthCenter
                     Console.ReadKey();
                 break;
             }
-            Console.WriteLine("Bye!");
         }
+        Console.WriteLine("Bye!");
     }
 
     private PatientPerson NewPatientData()
@@ -553,7 +555,7 @@ class HealthCenter
         Console.WriteLine("Illness Still Active(Y / N):");
         string active = Console.ReadLine();
 
-        if (active.Equals("Y") || active.Equals("y") || active.Equals("Yes"))
+        if (active.Equals("Y") || active.Equals("y"))
         {
             AddPatientIllness(description, date, true, snomed, icd);
         }
@@ -561,7 +563,7 @@ class HealthCenter
         {
             Console.WriteLine("Illness Finish Date (dd/mm/yyyy):");
             DateOnly finishDate = DateOnly.ParseExact(Console.ReadLine(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            
+    
             AddPatientIllness(description, date, false, snomed, icd, finishDate);
         }
     }
@@ -598,7 +600,7 @@ class HealthCenter
         void Medications()
         {
             string choice = "y";
-            DateOnly date = DateOnly.Parse(DateTime.Now.ToString("dd/MM/yyy"));
+            DateOnly date = DateOnly.Parse(DateTime.Now.ToString("dd/MM/yyyy"));
 
             while (choice.Equals("y"))
             {

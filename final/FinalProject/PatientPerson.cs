@@ -109,7 +109,7 @@ class PatientPerson : Person
 
     public void AddIllness(string description, DateOnly date, bool isActive, string snomed=null, string icd=null, DateOnly finishDate = default)
     {
-        IllnessDiagnostic illness = new IllnessDiagnostic(description, date, isActive, snomed=null, icd=null, finishDate = default);
+        IllnessDiagnostic illness = new IllnessDiagnostic(description, date, isActive, snomed, icd, finishDate);
         _illnesses.Add(illness);
     }
 
