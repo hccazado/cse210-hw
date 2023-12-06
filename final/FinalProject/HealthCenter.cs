@@ -176,8 +176,7 @@ class HealthCenter
                     Console.WriteLine("Invalid option! Returning to main menu.\nPress any key to continue");
                     Console.ReadKey();
                 break;
-            }
-            
+            }    
         }
         
         while(choice != "q" || choice != "quit")
@@ -238,7 +237,7 @@ class HealthCenter
         Console.WriteLine("Patient's Health Provider ID (0 for none):");
         int hProviderId = int.Parse(Console.ReadLine());        
         
-        Console.WriteLine("Patient's ART (blank for none)");
+        Console.WriteLine("Patient's ART (NA for none):");
         string art = Console.ReadLine();
 
         return NewPatient(name, document, docType, dob, hProvider, hProviderId, art);        
@@ -272,7 +271,7 @@ class HealthCenter
     {
         Console.Clear();
         Console.WriteLine($"\tAdding person address");
-        Console.WriteLine("street:");
+        Console.WriteLine("Street:");
         string address = Console.ReadLine();
 
         Console.WriteLine("Number:");
@@ -385,7 +384,7 @@ class HealthCenter
     private void DisplayPatientAllergies()
     {
         Console.Clear();
-        Console.WriteLine("Patient Allergies:");
+        Console.WriteLine("\tPatient Allergies:");
 
         _currentPatient.DisplayAllergies();
 
@@ -397,7 +396,7 @@ class HealthCenter
     {
 
         Console.Clear();
-        Console.WriteLine("Patient Immunizations:");
+        Console.WriteLine("\tPatient Immunizations:");
         _currentPatient.DisplayImmunizations();
         Console.WriteLine("Press any key to continue.");
         Console.ReadKey();
@@ -414,16 +413,16 @@ class HealthCenter
         Console.WriteLine("Description:");
         string description = Console.ReadLine();
 
-        Console.WriteLine("place:");
+        Console.WriteLine("Place:");
         string place = Console.ReadLine();
 
-        Console.WriteLine("current dosis:");
+        Console.WriteLine("Current dosis:");
         int currentDosis = int.Parse(Console.ReadLine());
 
-        Console.WriteLine("target dosis:");
+        Console.WriteLine("Target dosis:");
         int targetDosis = int.Parse(Console.ReadLine());
 
-        Console.WriteLine("is the schema complete (y/n):");
+        Console.WriteLine("Is the schema complete (y/n):");
         string complete = Console.ReadLine();
 
         if (complete == "y" || complete == "Y")
@@ -454,7 +453,7 @@ class HealthCenter
     private void DisplayPatientMedications()
     {
         Console.Clear();
-        Console.WriteLine("Patient Medications:");
+        Console.WriteLine("\tPatient Medications:");
         _currentPatient.DisplayMedications();
         Console.WriteLine("Press any key to continue.");
         Console.ReadKey();
@@ -463,7 +462,7 @@ class HealthCenter
     private void DisplayPatientIllnesses()
     {
         Console.Clear();
-        Console.WriteLine("Patient Illnesses:");
+        Console.WriteLine("\tPatient Illnesses:");
         _currentPatient.DisplayIllnesses();
         Console.WriteLine("Press any key to continue.");
         Console.ReadKey();
@@ -471,16 +470,12 @@ class HealthCenter
 
     private void DisplayPatientClinicalHistories()
     {
-        List<ClinicalHistory> histories = _currentPatient.GetClinicalHistories();
         Console.Clear();
-        Console.WriteLine("Patient Clical Histories:\n");
-
-        foreach(var history in histories)
-        {
-            Console.WriteLine(history.GetSummary());
-        }
+        Console.WriteLine("\tPatient Clical Histories:\n");
         
-        Console.WriteLine("\nPress any key to continue.");
+        _currentPatient.DisplayClinicalHistories();
+        
+        Console.WriteLine("Press any key to continue.");
         Console.ReadKey();
     }
 

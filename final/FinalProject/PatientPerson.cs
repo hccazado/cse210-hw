@@ -29,26 +29,6 @@ class PatientPerson : Person
         return _healthProvider;
     }
 
-    public ClinicalHistory GetLastClinicalHistory()
-    {
-        return _clinicalHistories.Last();
-    }
-
-    public List<ClinicalHistory> GetClinicalHistories()
-    {
-        return _clinicalHistories;
-    } 
-
-    public List<Immunization> GetImmunizations()
-    {
-        return _immunizations;
-    }
-
-    public List<Allergy> GetAllergies()
-    {
-        return _allergies;
-    }
-
     public void DisplayImmunizations()
     {
         for (int i = 0; i< _immunizations.Count;i++)
@@ -78,6 +58,14 @@ class PatientPerson : Person
         foreach(var illness in _illnesses)
         {
             Console.WriteLine(illness.GetDiagnostic());
+        }
+    }
+
+    public void DisplayClinicalHistories()
+    {
+        foreach(var history in _clinicalHistories)
+        {
+            Console.WriteLine(history.GetSummary());
         }
     }
 
@@ -123,21 +111,6 @@ class PatientPerson : Person
         _clinicalHistories.Add(history);
     }
 
-    public string DisplayClinicalHistory()
-    {
-
-        ClinicalHistory history;
-        if (_clinicalHistories.Count > 0)
-        {
-            history = _clinicalHistories.Last();
-            return history.GetSummary();
-        }
-        else
-        {
-            return "Patient doesn't have any clinical history!";
-        }
-    }
-
     override public string GetPersonSpecificData()
     {
         if(_art != null)
@@ -152,5 +125,4 @@ class PatientPerson : Person
     {
         return GetPerson();
     }
-
 }

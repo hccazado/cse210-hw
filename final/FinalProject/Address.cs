@@ -59,11 +59,6 @@ class Address
 
     public string GetAddress()
     {
-        if (_country != null)
-        {
-            return $"{_number},{_address} - {_city}, {_state} - {_zip} - {_country}";
-        }
-
-        return $"{_number},{_address} - {_city}, {_state} - {_zip}";
+        return $"{_number},{_address} - {_city}, {_state} - {_zip} - {_country}";
     }
 }
