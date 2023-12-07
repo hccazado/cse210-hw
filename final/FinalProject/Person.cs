@@ -27,7 +27,7 @@ abstract class Person
         _address = new Address(address, number, city, state, zip, country);
     }
 
-    public void updateAddress(string address, string number, string city, string state, string zip, string country=null)
+    public void UpdateAddress(string address, string number, string city, string state, string zip, string country=null)
     {
         _address.SetAddress(address);
         _address.SetNumber(number);
@@ -41,14 +41,4 @@ abstract class Person
     {
         return _address.GetAddress();
     }
-
-    public bool ComparePerson(string document)
-    {
-        if(document == _document)
-        {
-            return true;
-        }
-        return false;
-    }
-
 }

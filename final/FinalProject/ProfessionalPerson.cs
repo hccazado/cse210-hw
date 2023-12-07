@@ -13,7 +13,7 @@ class ProfessionalPerson : Person
         _isActive = isActive;
     }
 
-    public bool isActive()
+    public bool IsActive()
     {
         return _isActive;
     }

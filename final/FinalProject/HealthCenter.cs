@@ -27,8 +27,7 @@ class HealthCenter
             {
                 Console.Clear();
                 Console.WriteLine("\tPatient Options");
-                DisplayPatientData();
-
+                DisplayPatient();
                 Console.WriteLine("1  - New Medication");
                 Console.WriteLine("2  - New Allergy");
                 Console.WriteLine("3  - New Illness");
@@ -63,7 +62,7 @@ class HealthCenter
                         PatientAddImmunizationDosis();
                     break;
                     case "6":
-                        if(_currentDoctor != null && _currentDoctor.isActive())
+                        if(_currentDoctor != null && _currentDoctor.IsActive())
                         {   
                             PatientNewClinicalHistory();
                         }
@@ -120,11 +119,11 @@ class HealthCenter
             {
                 case "1":
                     _currentPatient = NewPatientData();
-                    PersonNewAddress(_currentPatient);
+                    NewPersonAddress(_currentPatient);
                 break;
                 case "2":
                     _currentDoctor = NewDoctorData();
-                    PersonNewAddress(_currentDoctor);
+                    NewPersonAddress(_currentDoctor);
                 break;
                 case "3":
                     if (_currentDoctor != null)
@@ -267,7 +266,7 @@ class HealthCenter
         return NewDoctor(name, document, docType, dob, register, activity, true);        
     }
 
-    private void PersonNewAddress(Person person)
+    private void NewPersonAddress(Person person)
     {
         Console.Clear();
         Console.WriteLine($"\tAdding person address");
@@ -347,7 +346,7 @@ class HealthCenter
         }
     } 
 
-    private void DisplayPatientData()
+    private void DisplayPatient()
     {
         if(_currentPatient == null)
         {

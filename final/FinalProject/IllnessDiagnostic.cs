@@ -21,7 +21,7 @@ class IllnessDiagnostic : Diagnostic
         _isActive = false;
     }
 
-    public bool GetIsActive()
+    public bool IsActive()
     {
         return _isActive;
     }
